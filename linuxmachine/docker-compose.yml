@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  agent1:
+    build:
+      context: .
+      dockerfile: azure-agent-linux.dockerfile
+    environment:
+      - AZP_URL=https://dev.azure.com/krossk
+      - AZP_AGENT_NAME=agent1
+      - AZP_POOL=Testing linux docker
+    volumes:
+      - /opt/Agents/agent1:/opt/Agents/agent1
+    secrets:
+      - azure_pat_token
+    restart: always
+
+  agent2:
+    build:
+      context: .
+      dockerfile: azure-agent-linux.dockerfile
+    environment:
+      - AZP_URL=https://dev.azure.com/krossk
+      - AZP_AGENT_NAME=agent2
+      - AZP_POOL=Testing linux docker
+    volumes:
+      - /opt/Agents/agent2:/opt/Agents/agent2
+    secrets:
+      - azure_pat_token
+    restart: always
+
+  agent3:
+    build:
+      context: .
+      dockerfile: azure-agent-linux.dockerfile
+    environment:
+      - AZP_URL=https://dev.azure.com/krossk
+      - AZP_AGENT_NAME=agent3
+      - AZP_POOL=Testing linux docker
+    volumes:
+      - /opt/Agents/agent3:/opt/Agents/agent3
+    secrets:
+      - azure_pat_token
+    restart: always
+
+secrets:
+  azure_pat_token:
+    external: true 
