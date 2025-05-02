@@ -23,12 +23,6 @@ sudo apt install unattended-upgrades
 sudo dpkg-reconfigure --priority=low unattended-upgrades
 ```
 
-## Stiahnutie [kros-sk.github.io](https://github.com/Kros-sk/kros-sk.github.io) repozitára
-
-```bash
-git clone -b master https://github.com/Kros-sk/kros-sk.github.io.git
-```
-
 ## Inštalácia Docker
 
 Postupovať podľa oficiálnej dokumentácie: [Docker](https://docs.docker.com/engine/install/ubuntu/)
@@ -57,6 +51,14 @@ docker run -d -p 8000:8000 -p 9000:9000 --name portainer --restart=always -v /va
 ```
 
 Po inštaláci sa dá pristupovať na adrese `http://[ip_adresa]:9000`.
+
+
+## Stiahnutie [kros-sk.github.io](https://github.com/Kros-sk/kros-sk.github.io) repozitára
+
+```bash
+git clone -b master https://github.com/Kros-sk/kros-sk.github.io.git
+```
+Po naklonovaní na mašinu budeme môcť spustiť kontajnery pre Build Agentov. Všetko sa rieši cez docker-compose.
 
 ## Vybuildovanie a spustenie kontajnerov
 
