@@ -7,10 +7,10 @@ services:
       dockerfile: azure-agent-linux.dockerfile
     environment:
       - AZP_URL=https://dev.azure.com/krossk
-      - AZP_AGENT_NAME=agent1
+      - AZP_AGENT_NAME=docker-01-build4
       - AZP_POOL=Testing linux docker
     volumes:
-      - /opt/Agents/agent1:/opt/Agents/agent1
+      - /opt/Agents/docker-01-build4:/opt/Agents/docker-01-build4
     secrets:
       - azure_pat_token
     restart: always
@@ -21,10 +21,10 @@ services:
       dockerfile: azure-agent-linux.dockerfile
     environment:
       - AZP_URL=https://dev.azure.com/krossk
-      - AZP_AGENT_NAME=agent2
+      - AZP_AGENT_NAME=docker-02-build4
       - AZP_POOL=Testing linux docker
     volumes:
-      - /opt/Agents/agent2:/opt/Agents/agent2
+      - /opt/Agents/docker-02-build4:/opt/Agents/docker-02-build4
     secrets:
       - azure_pat_token
     restart: always
@@ -35,10 +35,10 @@ services:
       dockerfile: azure-agent-linux.dockerfile
     environment:
       - AZP_URL=https://dev.azure.com/krossk
-      - AZP_AGENT_NAME=agent3
+      - AZP_AGENT_NAME=docker-03-build4
       - AZP_POOL=Testing linux docker
     volumes:
-      - /opt/Agents/agent3:/opt/Agents/agent3
+      - /opt/Agents/docker-03-build4:/opt/Agents/docker-03-build4
     secrets:
       - azure_pat_token
     restart: always
