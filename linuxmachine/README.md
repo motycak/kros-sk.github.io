@@ -68,6 +68,7 @@ Po inštalácii sa dá pristupovať na adrese `http://[ip_adresa]:9090`.
 ```bash
 git clone -b master https://github.com/Kros-sk/kros-sk.github.io.git
 ```
+
 Po naklonovaní na mašinu budeme môcť spustiť kontajnery pre Build Agentov. Všetko sa rieši cez docker-compose.
 
 ## Vybuilovanie a spustenie kontajnerov
