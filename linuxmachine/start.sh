@@ -25,18 +25,26 @@ print_header() {
 # Let the agent ignore the token env variables
 export VSO_AGENT_IGNORE="AZP_TOKEN"
 
-# Stiahnutie a rozbalenie agenta ak ešte neexistuje
-if [ ! -f "./config.sh" ]; then
-    print_header "Downloading and extracting Azure Pipelines agent..."
-    AGENT_VERSION=$(curl -s https://api.github.com/repos/microsoft/azure-pipelines-agent/releases/latest | jq -r '.tag_name' | sed 's/v//')
-    
-    if [ -z "$AGENT_VERSION" ] || [ "$AGENT_VERSION" == "null" ]; then
-        AGENT_VERSION="4.254.0"
-    fi
-    
-    echo "Downloading Azure Pipelines agent version $AGENT_VERSION"
-    curl -LsS "https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-${TARGETARCH}-${AGENT_VERSION}.tar.gz" | tar -xz
+# Odstránenie existujúcej konfigurácie (ak existuje)
+if [ -f "./config.sh" ]; then
+    print_header "Removing existing agent configuration..."
+    while true; do
+        ./config.sh remove --unattended --auth pat --token "$AZP_TOKEN" && break
+        echo "Failed to remove agent, retrying in 30 seconds..."
+        sleep 30
+    done
 fi
+
+# Downloading and extracting Azure Pipelines agent
+print_header "Downloading and extracting Azure Pipelines agent..."
+AGENT_VERSION=$(curl -s https://api.github.com/repos/microsoft/azure-pipelines-agent/releases/latest | jq -r '.tag_name' | sed 's/v//')
+
+if [ -z "$AGENT_VERSION" ] || [ "$AGENT_VERSION" == "null" ]; then
+    AGENT_VERSION="4.254.0"
+fi
+
+echo "Downloading Azure Pipelines agent version $AGENT_VERSION"
+curl -LsS "https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-${TARGETARCH}-${AGENT_VERSION}.tar.gz" | tar -xz
 
 print_header "Configuring Azure Pipelines agent..."
 
@@ -54,7 +62,6 @@ cleanup() {
   print_header "Removing agent..."
   while true; do
     ./config.sh remove --unattended --auth pat --token "$AZP_TOKEN" && break
-
     echo "Failed to remove agent, retrying in 30 seconds..."
     sleep 30
   done
