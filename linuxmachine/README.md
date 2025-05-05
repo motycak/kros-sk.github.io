@@ -60,7 +60,28 @@ git clone -b master https://github.com/Kros-sk/kros-sk.github.io.git
 ```
 Po naklonovaní na mašinu budeme môcť spustiť kontajnery pre Build Agentov. Všetko sa rieši cez docker-compose.
 
-## Vybuildovanie a spustenie kontajnerov
+## Vybuilovanie a spustenie kontajnerov
+
+Vybudovanie image podla [azure-agent-linux.dockerfile](azure-agent-linux.dockerfile).
+
+```bash
+docker build -t azure-agent-linux:latest -f azure-agent-linux.dockerfile . 
+```
+
+Deployovanie kontajnerov cez [docker-compose.yml](docker-compose.yml).
+
+```bash
+docker stack deploy -c docker-compose.yml build_agents_stack
+docker stack ls # zobraziť stacky
+```
+
+## Vypnutie kontajnerov
+
+```bash
+docker stack rm build_agents_stack
+```
+
+<!-- ## Vybuildovanie a spustenie kontajnerov
 
 ```bash
 docker-compose up -d
@@ -70,4 +91,4 @@ docker-compose up -d
 
 ```bash
 docker-compose down
-```
+``` -->
