@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   agent1:
-    build:
-      context: .
-      dockerfile: azure-agent-linux.dockerfile
+    image: azure-agent-linux:latest
     environment:
       - AZP_URL=https://dev.azure.com/krossk
       - AZP_AGENT_NAME=docker-01-build4
@@ -13,12 +11,12 @@ services:
       - /opt/Agents/docker-01-build4:/opt/Agents/docker-01-build4
     secrets:
       - azure_pat_token
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
 
   agent2:
-    build:
-      context: .
-      dockerfile: azure-agent-linux.dockerfile
+    image: azure-agent-linux:latest
     environment:
       - AZP_URL=https://dev.azure.com/krossk
       - AZP_AGENT_NAME=docker-02-build4
@@ -27,12 +25,12 @@ services:
       - /opt/Agents/docker-02-build4:/opt/Agents/docker-02-build4
     secrets:
       - azure_pat_token
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
 
   agent3:
-    build:
-      context: .
-      dockerfile: azure-agent-linux.dockerfile
+    image: azure-agent-linux:latest
     environment:
       - AZP_URL=https://dev.azure.com/krossk
       - AZP_AGENT_NAME=docker-03-build4
@@ -41,7 +39,9 @@ services:
       - /opt/Agents/docker-03-build4:/opt/Agents/docker-03-build4
     secrets:
       - azure_pat_token
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
 
 secrets:
   azure_pat_token:
