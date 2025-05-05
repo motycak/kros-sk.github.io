@@ -80,15 +80,3 @@ docker stack ls # zobraziť stacky
 ```bash
 docker stack rm build_agents_stack
 ```
-
-<!-- ## Vybuildovanie a spustenie kontajnerov
-
-```bash
-docker-compose up -d
-```
-
-## Vypnutie kontajnerov
-
-```bash
-docker-compose down
-``` -->
