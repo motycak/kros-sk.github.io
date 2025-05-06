@@ -8,8 +8,6 @@ RUN apt update && \
 
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
-RUN mkdir -p /opt/Agents
-
 COPY start.sh /opt/Agents/
 RUN chmod +x /opt/Agents/start.sh
 
