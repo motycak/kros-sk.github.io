@@ -7,6 +7,12 @@ RUN apt update && \
   apt install -y curl git jq libicu70 && \
   rm -rf /var/lib/apt/lists/*
 
+# Installing Node.js (latest LTS version)
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt-get update && \
+    apt-get install -y nodejs
+
+# Installing Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 WORKDIR /opt/Agents
