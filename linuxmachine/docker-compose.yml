@@ -9,6 +9,7 @@ services:
       - AZP_POOL=Testing linux docker
     volumes:
       - /opt/Agents/docker-01-build4:/opt/Agents/docker-01-build4
+      - /opt/Agents/cache:/opt/Agents/cache
     secrets:
       - azure_pat_token
     deploy:
@@ -23,6 +24,7 @@ services:
       - AZP_POOL=Testing linux docker
     volumes:
       - /opt/Agents/docker-02-build4:/opt/Agents/docker-02-build4
+      - /opt/Agents/cache:/opt/Agents/cache
     secrets:
       - azure_pat_token
     deploy:
@@ -37,6 +39,7 @@ services:
       - AZP_POOL=Testing linux docker
     volumes:
       - /opt/Agents/docker-03-build4:/opt/Agents/docker-03-build4
+      - /opt/Agents/cache:/opt/Agents/cache
     secrets:
       - azure_pat_token
     deploy:

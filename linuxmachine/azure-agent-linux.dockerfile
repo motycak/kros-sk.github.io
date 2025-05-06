@@ -25,12 +25,21 @@ RUN apt-get update && \
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 WORKDIR /opt/Agents
+
+# Cache folders and variables
+RUN mkdir -p /opt/Agents/cache/cypress \
+    /opt/Agents/cache/npm \
+    /opt/Agents/cache/nuget \
+    /opt/Agents/cache/nx
+ENV CYPRESS_CACHE_FOLDER="/opt/Agents/cache/cypress" \
+    NPM_CONFIG_CACHE="/opt/Agents/cache/npm" \
+    NUGET_PACKAGES="/opt/Agents/cache/nuget" \
+    NX_CACHE_FOLDER="/opt/Agents/cache/nx"
+
 COPY start.sh .
 RUN chmod +x start.sh
 
 ENTRYPOINT ["./start.sh"]
-
-# ENV DEBIAN_FRONTEND=noninteractive
 
 # Základné nástroje
 # RUN apt-get update && apt-get install -y \
