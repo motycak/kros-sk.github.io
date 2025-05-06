@@ -41,6 +41,14 @@ echo "VYGENEROVANY_TOKEN" | docker secret create azure_pat_token -
 docker secret ls # zobraziť secrety
 ```
 
+## Vytvorenie adresárov
+
+Vytvorenie adresárov pre Build Agentov a cache.
+
+```bash
+mkdir -p /opt/Agents /opt/Agents/cache /opt/Agents/cache/cypress /opt/Agents/cache/npm /opt/Agents/cache/nuget /opt/Agents/cache/nx
+```
+
 ## Inštalácia Portainer
 
 Portainer je webová aplikácia pre správu Docker kontajnerov.
