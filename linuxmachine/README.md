@@ -82,7 +82,7 @@ docker build -t azure-agent-linux:latest -f azure-agent-linux.dockerfile .
 Deployovanie kontajnerov cez [docker-compose.yml](docker-compose.yml).
 
 ```bash
-docker stack deploy -c docker-compose.yml build_agents_stack
+docker stack deploy -c docker-compose.yml build_agents_stack -d
 docker stack ls # zobraziť stacky
 ```
 

@@ -4,14 +4,15 @@ ENV TARGETARCH="linux-x64"
 
 RUN apt update && \
   apt upgrade -y && \
-  apt install -y curl git jq libicu70
+  apt install -y curl git jq libicu70 && \
+  rm -rf /var/lib/apt/lists/*
 
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
-COPY start.sh /opt/Agents/
-RUN chmod +x /opt/Agents/start.sh
-
 WORKDIR /opt/Agents
+COPY start.sh .
+RUN chmod +x start.sh
+
 ENTRYPOINT ["./start.sh"]
 
 # ENV DEBIAN_FRONTEND=noninteractive
