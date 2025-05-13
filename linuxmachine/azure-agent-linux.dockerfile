@@ -14,7 +14,7 @@ RUN apt-get update && \
 
 # Installing older versions of .NET SDK
 RUN curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --version 3.1.426 && \
-    curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --version 5.0.419 && \
+    curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --version 5.0.408 && \
     ln -s /root/.dotnet/dotnet /usr/local/bin/dotnet
 
 # Installing GitHub CLI
