@@ -8,6 +8,7 @@ services:
       - AZP_AGENT_NAME=docker-01-build4
       - AZP_POOL=Testing linux docker
       - KUBECONFIG=/opt/Agents/docker-01-build4/kubeconfig
+      - DEVEXTREME_KEY=${DEVEXTREME_KEY}
     volumes:
       - /opt/Agents/docker-01-build4:/opt/Agents/docker-01-build4 # Mozno ani netreba aby bolo na fyzickej masine. TODO upravit a vyskusat.
       - /opt/Agents/cache:/opt/Agents/cache
@@ -24,6 +25,7 @@ services:
       - AZP_AGENT_NAME=docker-02-build4
       - AZP_POOL=Testing linux docker
       - KUBECONFIG=/opt/Agents/docker-02-build4/kubeconfig
+      - DEVEXTREME_KEY=${DEVEXTREME_KEY}
     volumes:
       - /opt/Agents/docker-02-build4:/opt/Agents/docker-02-build4
       - /opt/Agents/cache:/opt/Agents/cache
@@ -40,6 +42,7 @@ services:
       - AZP_AGENT_NAME=docker-03-build4
       - AZP_POOL=Testing linux docker
       - KUBECONFIG=/opt/Agents/docker-03-build4/kubeconfig
+      - DEVEXTREME_KEY=${DEVEXTREME_KEY}
     volumes:
       - /opt/Agents/docker-03-build4:/opt/Agents/docker-03-build4
       - /opt/Agents/cache:/opt/Agents/cache
