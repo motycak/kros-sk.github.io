@@ -49,6 +49,12 @@ Vytvorenie adresárov pre Build Agentov a cache.
 mkdir -p /opt/Agents /opt/Agents/cache /opt/Agents/cache/cypress /opt/Agents/cache/npm /opt/Agents/cache/nuget /opt/Agents/cache/nx
 ```
 
+## Pridanie DEVEXTREME_KEY do environment variables
+
+```bash
+echo "DEVEXTREME_KEY=[realny_kluc]" | sudo tee -a /etc/environment
+```
+
 ## Inštalácia Portainer
 
 Portainer je webová aplikácia pre správu Docker kontajnerov.
