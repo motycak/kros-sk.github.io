@@ -9,7 +9,7 @@ RUN apt update && \
 
 # Installing .NET SDK versions
 RUN apt-get update && \
-    apt-get install -y dotnet-sdk-6.0 dotnet-sdk-8.0 && \
+    apt-get install -y dotnet-sdk-6.0 dotnet-sdk-7.0 dotnet-sdk-8.0 && \
     rm -rf /var/lib/apt/lists/*
 
 # Installing GitHub CLI
