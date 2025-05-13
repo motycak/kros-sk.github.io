@@ -8,7 +8,10 @@ RUN apt update && \
   rm -rf /var/lib/apt/lists/*
 
 # Installing .NET SDK versions
-RUN apt-get update && \
+RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    rm packages-microsoft-prod.deb && \
+    apt-get update && \
     apt-get install -y dotnet-sdk-3.1 dotnet-sdk-5.0 dotnet-sdk-6.0 dotnet-sdk-7.0 dotnet-sdk-8.0 && \
     rm -rf /var/lib/apt/lists/*
 
