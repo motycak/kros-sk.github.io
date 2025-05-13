@@ -12,8 +12,15 @@ RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-p
     dpkg -i packages-microsoft-prod.deb && \
     rm packages-microsoft-prod.deb && \
     apt-get update && \
-    apt-get install -y dotnet-host dotnet-hostfxr-6.0 dotnet-hostfxr-7.0 dotnet-hostfxr-8.0 && \
-    apt-get install -y dotnet-sdk-6.0 dotnet-sdk-7.0 dotnet-sdk-8.0 && \
+    # Install .NET 6.0
+    apt-get install -y dotnet-host-6.0 dotnet-hostfxr-6.0 && \
+    apt-get install -y dotnet-sdk-6.0 && \
+    # Install .NET 7.0
+    apt-get install -y dotnet-host-7.0 dotnet-hostfxr-7.0 && \
+    apt-get install -y dotnet-sdk-7.0 && \
+    # Install .NET 8.0
+    apt-get install -y dotnet-host-8.0 dotnet-hostfxr-8.0 && \
+    apt-get install -y dotnet-sdk-8.0 && \
     rm -rf /var/lib/apt/lists/*
 
 # Installing GitHub CLI
