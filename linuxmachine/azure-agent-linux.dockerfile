@@ -23,7 +23,8 @@ RUN wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsof
     dpkg -i packages-microsoft-prod.deb && \
     rm packages-microsoft-prod.deb && \
     apt-get update && \
-    apt-get install -y powershell
+    apt-get install -y powershell && \
+    ln -s /usr/bin/pwsh /usr/bin/powershell
 
 # Installing Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
