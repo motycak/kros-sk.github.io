@@ -4,18 +4,15 @@ ENV TARGETARCH="linux-x64"
 
 RUN apt update && \
   apt upgrade -y && \
-  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 && \
+  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 snapd && \
   rm -rf /var/lib/apt/lists/*
 
-# Installing .NET SDK versions
-RUN apt-get update && \
-    apt-get install -y dotnet-sdk-6.0 dotnet-sdk-7.0 dotnet-sdk-8.0 && \
-    rm -rf /var/lib/apt/lists/*
-
-# Installing older versions of .NET SDK
-RUN curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --version 3.1.426 && \
-    curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --version 5.0.408 && \
-    ln -s /root/.dotnet/dotnet /usr/local/bin/dotnet
+# Installing .NET SDK versions using Snap
+RUN snap install dotnet-sdk --classic --channel=3.1/stable && \
+    snap install dotnet-sdk --classic --channel=6.0/stable && \
+    snap install dotnet-sdk --classic --channel=7.0/stable && \
+    snap install dotnet-sdk --classic --channel=8.0/stable && \
+    ln -s /snap/bin/dotnet-sdk.dotnet /usr/local/bin/dotnet
 
 # Installing GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
