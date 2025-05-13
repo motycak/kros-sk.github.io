@@ -4,8 +4,14 @@ ENV TARGETARCH="linux-x64"
 
 RUN apt update && \
   apt upgrade -y && \
-  apt install -y curl git jq libicu70 zip && \
+  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 && \
   rm -rf /var/lib/apt/lists/*
+
+# Installing GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+    apt-get update && \
+    apt-get install -y gh
 
 # Installing Node.js (latest LTS version)
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
@@ -13,9 +19,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
     apt-get install -y nodejs
 
 # Installing PowerShell
-RUN apt-get update && \
-    apt-get install -y wget apt-transport-https software-properties-common && \
-    wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb && \
+RUN wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb && \
     dpkg -i packages-microsoft-prod.deb && \
     rm packages-microsoft-prod.deb && \
     apt-get update && \
