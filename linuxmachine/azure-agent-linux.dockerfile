@@ -7,12 +7,10 @@ RUN apt update && \
   apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates && \
   rm -rf /var/lib/apt/lists/*
 
-# Add Ubuntu 20.04 repository for libssl1.1 (needed by .NET for Azure Functions)
-RUN echo "deb http://security.ubuntu.com/ubuntu focal-security main" | tee /etc/apt/sources.list.d/focal-security.list && \
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32 && \
-    apt-get update && \
-    apt-get install -y libssl1.1 && \
-    rm -rf /var/lib/apt/lists/*
+# Add repository for libssl1.1 (needed by .NET for Azure Functions)
+RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
+    dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
+    rm libssl1.1_1.1.1f-1ubuntu2_amd64.deb
 
 # Installing .NET SDK versions
 ENV DOTNET_INSTALL_DIR="/usr/lib/dotnet"
