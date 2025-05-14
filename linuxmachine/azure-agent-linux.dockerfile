@@ -13,9 +13,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Installing older versions of .NET SDK
+ENV DOTNET_INSTALL_DIR="/usr/lib/dotnet"
 RUN curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --version 3.1.426 && \
     curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --version 5.0.408 && \
-    ln -s /root/.dotnet/dotnet /usr/local/bin/dotnet
 
 # Installing GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
