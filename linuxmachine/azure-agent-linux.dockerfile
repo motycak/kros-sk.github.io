@@ -7,6 +7,11 @@ RUN apt update && \
   apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates && \
   rm -rf /var/lib/apt/lists/*
 
+# Add repository for libssl1.1 (needed by .NET for Azure Functions)
+RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
+    dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
+    rm libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+
 # Installing .NET SDK versions
 ENV DOTNET_INSTALL_DIR="/usr/lib/dotnet"
 RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 3.1 && \
