@@ -38,6 +38,11 @@ RUN wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsof
 # Installing Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
+# Installing Kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl
+
 WORKDIR /opt/Agents
 
 # Cache folders and variables
@@ -54,24 +59,6 @@ COPY start.sh .
 RUN chmod +x start.sh
 
 ENTRYPOINT ["./start.sh"]
-
-# Základné nástroje
-# RUN apt-get update && apt-get install -y \
-#     curl \
-#     wget \
-#     git \
-#     unzip \
-#     ca-certificates \
-#     apt-transport-https \
-#     software-properties-common \
-#     sudo \
-#     jq \
-#     lsb-release \
-#     gnupg2
-
-# # kubectl
-# RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
-#     chmod +x kubectl && mv kubectl /usr/local/bin/
 
 # # 7-Zip
 # RUN apt-get install -y p7zip-full
