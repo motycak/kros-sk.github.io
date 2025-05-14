@@ -19,7 +19,7 @@ RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-insta
     curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 6.0 && \
     curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 7.0 && \
     curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 8.0
-ENV DOTNET_ROOT="/usr/lib/dotnet"
+ENV PATH="$PATH:/usr/lib/dotnet"
 
 # Installing GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
