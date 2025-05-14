@@ -8,11 +8,6 @@ RUN apt update && \
   rm -rf /var/lib/apt/lists/*
 
 # Installing .NET SDK versions
-# RUN apt-get update && \
-#     apt-get install -y dotnet-sdk-6.0 dotnet-sdk-7.0 dotnet-sdk-8.0 && \
-#     rm -rf /var/lib/apt/lists/*
-
-# Installing older versions of .NET SDK
 ENV DOTNET_INSTALL_DIR="/usr/lib/dotnet"
 RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 3.1 && \
     curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 5.0 && \
