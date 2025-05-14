@@ -8,14 +8,17 @@ RUN apt update && \
   rm -rf /var/lib/apt/lists/*
 
 # Installing .NET SDK versions
-RUN apt-get update && \
-    apt-get install -y dotnet-sdk-6.0 dotnet-sdk-7.0 dotnet-sdk-8.0 && \
-    rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && \
+#     apt-get install -y dotnet-sdk-6.0 dotnet-sdk-7.0 dotnet-sdk-8.0 && \
+#     rm -rf /var/lib/apt/lists/*
 
 # Installing older versions of .NET SDK
 ENV DOTNET_INSTALL_DIR="/usr/lib/dotnet"
-RUN curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --version 3.1.426 && \
-    curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --version 5.0.408
+RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --version 3.1 && \
+    curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --version 5.0 && \
+    curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --version 6.0 && \
+    curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --version 7.0 && \
+    curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --version 8.0
 
 # Installing GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
@@ -70,22 +73,9 @@ ENTRYPOINT ["./start.sh"]
 #     lsb-release \
 #     gnupg2
 
-# # .NET SDK 7 a 8
-# RUN wget https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
-#     dpkg -i packages-microsoft-prod.deb && \
-#     rm packages-microsoft-prod.deb && \
-#     apt-get update && \
-#     apt-get install -y dotnet-sdk-7.0 dotnet-sdk-8.0
-
 # # kubectl
 # RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
 #     chmod +x kubectl && mv kubectl /usr/local/bin/
-
-# # GitHub CLI
-# RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
-#     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
-#     apt-get update && \
-#     apt-get install -y gh
 
 # # 7-Zip
 # RUN apt-get install -y p7zip-full
