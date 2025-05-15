@@ -53,10 +53,10 @@ ENV LANG=sk_SK.UTF-8 \
     LC_ALL=sk_SK.UTF-8 \
     TZ=Europe/Bratislava
 
-RUN apt-get update && \
-    apt-get install -y locales tzdata && \
-    echo "Europe/Bratislava" > /etc/timezone && \
+RUN echo "Europe/Bratislava" > /etc/timezone && \
     ln -fs /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
+    apt-get update && \
+    apt-get install -y locales tzdata && \
     locale-gen sk_SK.UTF-8 && \
     update-locale LANG=sk_SK.UTF-8 LC_ALL=sk_SK.UTF-8 && \
     dpkg-reconfigure -f noninteractive tzdata && \
