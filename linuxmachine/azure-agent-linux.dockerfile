@@ -3,26 +3,16 @@ FROM ubuntu:22.04
 ENV TARGETARCH="linux-x64"
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN echo 'tzdata tzdata/Areas select Europe' | debconf-set-selections && \
-    echo 'tzdata tzdata/Zones/Europe select Bratislava' | debconf-set-selections && \
-    apt update && \
-    apt upgrade -y && \
-    apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales locales-all tzdata && \
-    echo "Europe/Bratislava" > /etc/timezone && \
-    ln -sf /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
-    dpkg-reconfigure -f noninteractive tzdata && \
-    sed -i -e 's/# sk_SK.UTF-8 UTF-8/sk_SK.UTF-8 UTF-8/' /etc/locale.gen && \
-    locale-gen sk_SK.UTF-8 && \
-    echo "LANG=sk_SK.UTF-8" > /etc/default/locale && \
-    echo "LANGUAGE=sk_SK:sk" >> /etc/default/locale && \
-    echo "LC_ALL=sk_SK.UTF-8" >> /etc/default/locale && \
-    update-locale LANG=sk_SK.UTF-8 LANGUAGE=sk_SK:sk LC_ALL=sk_SK.UTF-8 && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt update && \
+  apt upgrade -y && \
+  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates && \
+  rm -rf /var/lib/apt/lists/*
 
-RUN echo 'export LANG=sk_SK.UTF-8' >> /etc/bash.bashrc && \
-    echo 'export LANGUAGE=sk_SK:sk' >> /etc/bash.bashrc && \
-    echo 'export LC_ALL=sk_SK.UTF-8' >> /etc/bash.bashrc
-
+RUN sed -i '/sk_SK.UTF-8/s/^# //g' /etc/locale.gen && \
+  locale-gen
+ENV LANG sk_SK.UTF-8  
+ENV LANGUAGE sk_SK:sk  
+ENV LC_ALL sk_SK.UTF-8
 
 # # Add repository for libssl1.1 (needed by .NET for Azure Functions)
 # RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
@@ -60,10 +50,31 @@ RUN echo 'export LANG=sk_SK.UTF-8' >> /etc/bash.bashrc && \
 # Installing Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
-# Installing Kubectl
-RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
-    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
-    rm kubectl
+# # Installing Kubectl
+# RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+#     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+#     rm kubectl
+
+# Nastavenie lokalizácie a časovej zóny - neinteraktívne
+# ENV DEBIAN_FRONTEND=noninteractive
+
+# RUN apt-get update && \
+#     apt-get install -y locales tzdata && \
+#     echo "Europe/Bratislava" > /etc/timezone && \
+#     ln -sf /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
+#     dpkg-reconfigure -f noninteractive tzdata && \
+#     sed -i -e 's/# sk_SK.UTF-8 UTF-8/sk_SK.UTF-8 UTF-8/' /etc/locale.gen && \
+#     locale-gen sk_SK.UTF-8 && \
+#     echo 'LANG="sk_SK.UTF-8"' > /etc/default/locale && \
+#     echo 'LANGUAGE="sk_SK:sk"' >> /etc/default/locale && \
+#     echo 'LC_ALL="sk_SK.UTF-8"' >> /etc/default/locale && \
+#     update-locale LANG=sk_SK.UTF-8 LANGUAGE=sk_SK:sk LC_ALL=sk_SK.UTF-8 && \
+#     rm -rf /var/lib/apt/lists/*
+
+# ENV LANG=sk_SK.UTF-8 \
+#     LANGUAGE=sk_SK:sk \
+#     LC_ALL=sk_SK.UTF-8 \
+#     TZ=Europe/Bratislava
 
 WORKDIR /opt/Agents
 
