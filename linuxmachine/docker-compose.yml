@@ -9,6 +9,10 @@ services:
       - AZP_POOL=Testing linux docker
       - KUBECONFIG=/opt/Agents/docker-01-build4/kubeconfig
       - DEVEXTREME_KEY=${DEVEXTREME_KEY}
+      - LANG=sk_SK.UTF-8
+      - LANGUAGE=sk_SK:sk
+      - LC_ALL=sk_SK.UTF-8
+      - TZ=Europe/Bratislava
     volumes:
       # - /opt/Agents/docker-01-build4:/opt/Agents/docker-01-build4 # Ak by sme potrebovali uchovavat workspaces aj po ukonceni kontajneru.
       - /opt/Agents/cache:/opt/Agents/cache
@@ -26,6 +30,10 @@ services:
       - AZP_POOL=Testing linux docker
       - KUBECONFIG=/opt/Agents/docker-02-build4/kubeconfig
       - DEVEXTREME_KEY=${DEVEXTREME_KEY}
+      - LANG=sk_SK.UTF-8
+      - LANGUAGE=sk_SK:sk
+      - LC_ALL=sk_SK.UTF-8
+      - TZ=Europe/Bratislava
     volumes:
       # - /opt/Agents/docker-02-build4:/opt/Agents/docker-02-build4 # Ak by sme potrebovali uchovavat workspaces aj po ukonceni kontajneru.
       - /opt/Agents/cache:/opt/Agents/cache
@@ -43,6 +51,10 @@ services:
       - AZP_POOL=Testing linux docker
       - KUBECONFIG=/opt/Agents/docker-03-build4/kubeconfig
       - DEVEXTREME_KEY=${DEVEXTREME_KEY}
+      - LANG=sk_SK.UTF-8
+      - LANGUAGE=sk_SK:sk
+      - LC_ALL=sk_SK.UTF-8
+      - TZ=Europe/Bratislava
     volumes:
       # - /opt/Agents/docker-03-build4:/opt/Agents/docker-03-build4 # Ak by sme potrebovali uchovavat workspaces aj po ukonceni kontajneru.
       - /opt/Agents/cache:/opt/Agents/cache
