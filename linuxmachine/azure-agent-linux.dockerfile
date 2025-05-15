@@ -49,17 +49,20 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
     rm kubectl
 
 # Nastavenie lokalizácie a časovej zóny - neinteraktívne
-ENV LANG=sk_SK.UTF-8 \
-    LC_ALL=sk_SK.UTF-8 \
-    TZ=Europe/Bratislava
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG=sk_SK.UTF-8
+ENV LANGUAGE=sk_SK:sk
+ENV LC_ALL=sk_SK.UTF-8
+ENV TZ=Europe/Bratislava
 
-RUN echo "Europe/Bratislava" > /etc/timezone && \
-    ln -fs /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y locales tzdata && \
-    locale-gen sk_SK.UTF-8 && \
-    update-locale LANG=sk_SK.UTF-8 LC_ALL=sk_SK.UTF-8 && \
+    echo "Europe/Bratislava" > /etc/timezone && \
+    ln -sf /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata && \
+    sed -i '/^# sk_SK.UTF-8 UTF-8/s/^# //' /etc/locale.gen && \
+    locale-gen sk_SK.UTF-8 && \
+    update-locale LANG=sk_SK.UTF-8 LANGUAGE=sk_SK:sk LC_ALL=sk_SK.UTF-8 && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/Agents
