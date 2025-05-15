@@ -49,12 +49,12 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
     rm kubectl
 
 # Nastavenie lokalizácie a časovej zóny
-RUN apt-get update && \
+RUN DEBIAN_FRONTEND=noninteractive \
+    apt-get update && \
     apt-get install -y locales tzdata && \
     locale-gen sk_SK.UTF-8 && \
     update-locale LANG=sk_SK.UTF-8 LC_ALL=sk_SK.UTF-8 && \
     ln -fs /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
-    dpkg-reconfigure -f noninteractive tzdata && \
     rm -rf /var/lib/apt/lists/*
 
 ENV LANG=sk_SK.UTF-8 \
