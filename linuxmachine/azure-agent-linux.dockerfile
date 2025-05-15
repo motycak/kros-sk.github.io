@@ -51,8 +51,6 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 # Nastavenie lokalizácie a časovej zóny - neinteraktívne
 RUN echo 'tzdata tzdata/Areas select Europe' | debconf-set-selections && \
     echo 'tzdata tzdata/Zones/Europe select Bratislava' | debconf-set-selections && \
-    echo "Europe/Bratislava" > /etc/timezone && \
-    ln -fs /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
     apt-get update && \
     apt-get install -y locales tzdata && \
     locale-gen sk_SK.UTF-8 && \
