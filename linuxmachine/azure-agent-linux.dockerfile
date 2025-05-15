@@ -4,7 +4,12 @@ ENV TARGETARCH="linux-x64"
 
 RUN apt update && \
   apt upgrade -y && \
-  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates && \
+  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales tzdata && \
+  echo "Europe/Bratislava" > /etc/timezone && \
+  ln -sf /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
+  DEBIAN_FRONTEND=noninteractive dpkg-reconfigure tzdata && \
+  sed -i -e 's/# sk_SK.UTF-8 UTF-8/sk_SK.UTF-8 UTF-8/' /etc/locale.gen && \
+  locale-gen sk_SK.UTF-8 && \
   rm -rf /var/lib/apt/lists/*
 
 # Add repository for libssl1.1 (needed by .NET for Azure Functions)
@@ -47,27 +52,6 @@ RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
-
-# Nastavenie lokalizácie a časovej zóny - neinteraktívne
-# ENV DEBIAN_FRONTEND=noninteractive
-
-# RUN apt-get update && \
-#     apt-get install -y locales tzdata && \
-#     echo "Europe/Bratislava" > /etc/timezone && \
-#     ln -sf /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
-#     dpkg-reconfigure -f noninteractive tzdata && \
-#     sed -i -e 's/# sk_SK.UTF-8 UTF-8/sk_SK.UTF-8 UTF-8/' /etc/locale.gen && \
-#     locale-gen sk_SK.UTF-8 && \
-#     echo 'LANG="sk_SK.UTF-8"' > /etc/default/locale && \
-#     echo 'LANGUAGE="sk_SK:sk"' >> /etc/default/locale && \
-#     echo 'LC_ALL="sk_SK.UTF-8"' >> /etc/default/locale && \
-#     update-locale LANG=sk_SK.UTF-8 LANGUAGE=sk_SK:sk LC_ALL=sk_SK.UTF-8 && \
-#     rm -rf /var/lib/apt/lists/*
-
-# ENV LANG=sk_SK.UTF-8 \
-#     LANGUAGE=sk_SK:sk \
-#     LC_ALL=sk_SK.UTF-8 \
-#     TZ=Europe/Bratislava
 
 WORKDIR /opt/Agents
 
