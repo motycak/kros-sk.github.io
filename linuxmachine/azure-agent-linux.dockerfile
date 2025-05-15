@@ -55,6 +55,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     locale-gen sk_SK.UTF-8 && \
     update-locale LANG=sk_SK.UTF-8 LC_ALL=sk_SK.UTF-8 && \
     ln -fs /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata && \
     rm -rf /var/lib/apt/lists/*
 
 ENV LANG=sk_SK.UTF-8 \
