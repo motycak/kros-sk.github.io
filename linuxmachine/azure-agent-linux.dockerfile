@@ -14,7 +14,6 @@ RUN sed -i '/sk_SK.UTF-8/s/^# //g' /etc/locale.gen && \
 ENV LANG=sk_SK.UTF-8
 ENV LANGUAGE=sk_SK:sk
 ENV LC_ALL=sk_SK.UTF-8
-ENV DOTNET_System_Drawing_EnableUnixSupport=true
 
 #Set timezone
 RUN echo "Europe/Bratislava" > /etc/timezone && \
