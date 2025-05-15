@@ -49,7 +49,6 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
     rm kubectl
 
 # Nastavenie lokalizácie a časovej zóny - neinteraktívne
-ENV DEBIAN_FRONTEND=noninteractive
 RUN echo 'tzdata tzdata/Areas select Europe' | debconf-set-selections && \
     echo 'tzdata tzdata/Zones/Europe select Bratislava' | debconf-set-selections && \
     echo "Europe/Bratislava" > /etc/timezone && \
