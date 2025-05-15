@@ -1,16 +1,19 @@
 FROM ubuntu:22.04
 
 ENV TARGETARCH="linux-x64"
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && \
-  apt upgrade -y && \
-  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales tzdata && \
-  echo "Europe/Bratislava" > /etc/timezone && \
-  ln -sf /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
-  DEBIAN_FRONTEND=noninteractive dpkg-reconfigure tzdata && \
-  sed -i -e 's/# sk_SK.UTF-8 UTF-8/sk_SK.UTF-8 UTF-8/' /etc/locale.gen && \
-  locale-gen sk_SK.UTF-8 && \
-  rm -rf /var/lib/apt/lists/*
+RUN echo 'tzdata tzdata/Areas select Europe' | debconf-set-selections && \
+    echo 'tzdata tzdata/Zones/Europe select Bratislava' | debconf-set-selections && \
+    apt update && \
+    apt upgrade -y && \
+    apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales tzdata && \
+    echo "Europe/Bratislava" > /etc/timezone && \
+    ln -sf /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    sed -i -e 's/# sk_SK.UTF-8 UTF-8/sk_SK.UTF-8 UTF-8/' /etc/locale.gen && \
+    locale-gen sk_SK.UTF-8 && \
+    rm -rf /var/lib/apt/lists/*
 
 # Add repository for libssl1.1 (needed by .NET for Azure Functions)
 RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
