@@ -14,46 +14,46 @@ ENV LANG sk_SK.UTF-8
 ENV LANGUAGE sk_SK:sk  
 ENV LC_ALL sk_SK.UTF-8
 
-# # Add repository for libssl1.1 (needed by .NET for Azure Functions)
-# RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
-#     dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
-#     rm libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+# Add repository for libssl1.1 (needed by .NET for Azure Functions)
+RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
+    dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
+    rm libssl1.1_1.1.1f-1ubuntu2_amd64.deb
 
-# # Installing .NET SDK versions
-# ENV DOTNET_INSTALL_DIR="/usr/lib/dotnet"
-# RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 3.1 && \
-#     curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 5.0 && \
-#     curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 6.0 && \
-#     curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 7.0 && \
-#     curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 8.0
-# ENV PATH="$PATH:/usr/lib/dotnet"
+# Installing .NET SDK versions
+ENV DOTNET_INSTALL_DIR="/usr/lib/dotnet"
+RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 3.1 && \
+    curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 5.0 && \
+    curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 6.0 && \
+    curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 7.0 && \
+    curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 8.0
+ENV PATH="$PATH:/usr/lib/dotnet"
 
-# # Installing GitHub CLI
-# RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
-#     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
-#     apt-get update && \
-#     apt-get install -y gh
+# Installing GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+    apt-get update && \
+    apt-get install -y gh
 
-# # Installing Node.js (latest LTS version)
-# RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
-#     apt-get update && \
-#     apt-get install -y nodejs
+# Installing Node.js (latest LTS version)
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt-get update && \
+    apt-get install -y nodejs
 
-# # Installing PowerShell
-# RUN wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb && \
-#     dpkg -i packages-microsoft-prod.deb && \
-#     rm packages-microsoft-prod.deb && \
-#     apt-get update && \
-#     apt-get install -y powershell && \
-#     ln -s /usr/bin/pwsh /usr/bin/powershell
+# Installing PowerShell
+RUN wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    rm packages-microsoft-prod.deb && \
+    apt-get update && \
+    apt-get install -y powershell && \
+    ln -s /usr/bin/pwsh /usr/bin/powershell
 
 # Installing Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
-# # Installing Kubectl
-# RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
-#     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
-#     rm kubectl
+# Installing Kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl
 
 # Nastavenie lokalizácie a časovej zóny - neinteraktívne
 # ENV DEBIAN_FRONTEND=noninteractive
