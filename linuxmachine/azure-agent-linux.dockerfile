@@ -7,7 +7,7 @@ RUN echo 'tzdata tzdata/Areas select Europe' | debconf-set-selections && \
     echo 'tzdata tzdata/Zones/Europe select Bratislava' | debconf-set-selections && \
     apt update && \
     apt upgrade -y && \
-    apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales tzdata && \
+    apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales locales-all tzdata && \
     echo "Europe/Bratislava" > /etc/timezone && \
     ln -sf /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata && \
