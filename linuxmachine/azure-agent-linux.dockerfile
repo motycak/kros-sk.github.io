@@ -13,6 +13,10 @@ RUN echo 'tzdata tzdata/Areas select Europe' | debconf-set-selections && \
     dpkg-reconfigure -f noninteractive tzdata && \
     sed -i -e 's/# sk_SK.UTF-8 UTF-8/sk_SK.UTF-8 UTF-8/' /etc/locale.gen && \
     locale-gen sk_SK.UTF-8 && \
+    echo "LANG=sk_SK.UTF-8" > /etc/default/locale && \
+    echo "LANGUAGE=sk_SK:sk" >> /etc/default/locale && \
+    echo "LC_ALL=sk_SK.UTF-8" >> /etc/default/locale && \
+    update-locale LANG=sk_SK.UTF-8 LANGUAGE=sk_SK:sk LC_ALL=sk_SK.UTF-8 && \
     rm -rf /var/lib/apt/lists/*
 
 # Add repository for libssl1.1 (needed by .NET for Azure Functions)
