@@ -5,14 +5,20 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && \
   apt upgrade -y && \
-  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales && \
+  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales tzdata && \
   rm -rf /var/lib/apt/lists/*
 
+#Set locale
 RUN sed -i '/sk_SK.UTF-8/s/^# //g' /etc/locale.gen && \
   locale-gen
-ENV LANG sk_SK.UTF-8  
-ENV LANGUAGE sk_SK:sk  
-ENV LC_ALL sk_SK.UTF-8
+ENV LANG=sk_SK.UTF-8
+ENV LANGUAGE=sk_SK:sk
+ENV LC_ALL=sk_SK.UTF-8
+
+#Set timezone
+RUN echo "Europe/Bratislava" > /etc/timezone && \
+    ln -sf /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
 
 # # Add repository for libssl1.1 (needed by .NET for Azure Functions)
 # RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
