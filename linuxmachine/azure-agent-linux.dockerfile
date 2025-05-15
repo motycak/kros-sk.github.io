@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && \
   apt upgrade -y && \
-  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates && \
+  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales && \
   rm -rf /var/lib/apt/lists/*
 
 RUN sed -i '/sk_SK.UTF-8/s/^# //g' /etc/locale.gen && \
