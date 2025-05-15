@@ -71,10 +71,4 @@ trap 'cleanup; exit 130' INT TERM
 
 print_header "Starting Azure Pipelines agent..."
 
-# print locale
-print_header "Locale:"
-locale
-print_header "Date:"
-date
-
 ./run.sh 
