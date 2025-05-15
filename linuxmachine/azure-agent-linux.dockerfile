@@ -19,6 +19,11 @@ RUN echo 'tzdata tzdata/Areas select Europe' | debconf-set-selections && \
     update-locale LANG=sk_SK.UTF-8 LANGUAGE=sk_SK:sk LC_ALL=sk_SK.UTF-8 && \
     rm -rf /var/lib/apt/lists/*
 
+RUN echo 'export LANG=sk_SK.UTF-8' >> /etc/bash.bashrc && \
+    echo 'export LANGUAGE=sk_SK:sk' >> /etc/bash.bashrc && \
+    echo 'export LC_ALL=sk_SK.UTF-8' >> /etc/bash.bashrc
+
+
 # # Add repository for libssl1.1 (needed by .NET for Azure Functions)
 # RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
 #     dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
