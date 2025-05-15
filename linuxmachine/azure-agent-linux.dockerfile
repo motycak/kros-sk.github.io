@@ -48,13 +48,16 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
 
-# Nastavenie lokalizácie a časovej zóny
-RUN DEBIAN_FRONTEND=noninteractive \
+# Nastavenie lokalizácie a časovej zóny - neinteraktívne
+ENV DEBIAN_FRONTEND=noninteractive
+RUN echo 'tzdata tzdata/Areas select Europe' | debconf-set-selections && \
+    echo 'tzdata tzdata/Zones/Europe select Bratislava' | debconf-set-selections && \
+    echo "Europe/Bratislava" > /etc/timezone && \
+    ln -fs /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
     apt-get update && \
     apt-get install -y locales tzdata && \
     locale-gen sk_SK.UTF-8 && \
     update-locale LANG=sk_SK.UTF-8 LC_ALL=sk_SK.UTF-8 && \
-    ln -fs /usr/share/zoneinfo/Europe/Bratislava /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata && \
     rm -rf /var/lib/apt/lists/*
 
