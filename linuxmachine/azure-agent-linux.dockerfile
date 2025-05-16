@@ -1,11 +1,11 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ENV TARGETARCH="linux-x64"
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && \
   apt upgrade -y && \
-  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales tzdata libgit2-dev && \
+  apt install -y curl git jq libicu-dev zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales tzdata libgit2-dev icu-devtools && \
   rm -rf /var/lib/apt/lists/*
 
 #Set locale
@@ -14,6 +14,7 @@ RUN sed -i '/sk_SK.UTF-8/s/^# //g' /etc/locale.gen && \
 ENV LANG=sk_SK.UTF-8
 ENV LANGUAGE=sk_SK:sk
 ENV LC_ALL=sk_SK.UTF-8
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 #Set timezone
 RUN echo "Europe/Bratislava" > /etc/timezone && \
