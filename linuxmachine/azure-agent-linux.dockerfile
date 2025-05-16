@@ -41,7 +41,9 @@ RUN mkdir -p /opt/Agents/tools && \
     dotnet tool install Kros.VariableSubstitution --tool-path /opt/Agents/tools && \
     dotnet nuget add source "https://api.nuget.org/v3/index.json" --name "nuget.org" 
 
-
+# Install Azure artifacts credential provider # uncomment if needed
+# RUN wget -qO- https://aka.ms/install-artifacts-credprovider.sh | bash && \
+#     sh -c "$(curl -fsSL https://aka.ms/install-artifacts-credprovider.sh)"
 
 # Installing GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
