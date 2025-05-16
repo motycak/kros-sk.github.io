@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && \
   apt upgrade -y && \
-  apt install -y curl git jq libicu-dev zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales tzdata libgit2-dev icu-devtools && \
+  apt install -y curl git jq libicu74 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales tzdata libgit2-dev icu-devtools && \
   rm -rf /var/lib/apt/lists/*
 
 #Set locale
@@ -14,7 +14,7 @@ RUN sed -i '/sk_SK.UTF-8/s/^# //g' /etc/locale.gen && \
 ENV LANG=sk_SK.UTF-8
 ENV LANGUAGE=sk_SK:sk
 ENV LC_ALL=sk_SK.UTF-8
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true
+ENV DOTNET_ICU_VERSION_OVERRIDE=74.2
 
 #Set timezone
 RUN echo "Europe/Bratislava" > /etc/timezone && \
