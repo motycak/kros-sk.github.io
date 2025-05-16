@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && \
   apt upgrade -y && \
   apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales tzdata libgit2-dev && \
+  git config --system core.worktree false && \
   rm -rf /var/lib/apt/lists/*
 
 #Set locale
