@@ -34,6 +34,13 @@ RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-insta
     curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --channel 8.0
 ENV PATH="$PATH:/usr/lib/dotnet"
 
+# .NET global tools
+RUN mkdir -p /opt/Agents/tools
+RUN dotnet tool install dotnet-affected --tool-path /opt/Agents/tools
+RUN dotnet tool install Kros.DummyData.Initializer --tool-path /opt/Agents/tools
+RUN dotnet tool install Kros.VariableSubstitution --tool-path /opt/Agents/tools
+RUN dotnet nuget add source "https://api.nuget.org/v3/index.json" --name "nuget.org" 
+
 # Installing GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
