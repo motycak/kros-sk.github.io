@@ -39,7 +39,6 @@ RUN mkdir -p /opt/Agents/tools && \
     dotnet tool install dotnet-affected --tool-path /opt/Agents/tools && \
     dotnet tool install Kros.DummyData.Initializer --tool-path /opt/Agents/tools && \
     dotnet tool install Kros.VariableSubstitution --tool-path /opt/Agents/tools && \
-    dotnet nuget add source "https://api.nuget.org/v3/index.json" --name "nuget.org" 
 
 # Install Azure artifacts credential provider # uncomment if needed
 # RUN wget -qO- https://aka.ms/install-artifacts-credprovider.sh | bash && \
