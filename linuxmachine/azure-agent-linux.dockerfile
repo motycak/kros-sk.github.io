@@ -1,11 +1,11 @@
-FROM ubuntu:24.04
+FROM ubuntu:22.04
 
 ENV TARGETARCH="linux-x64"
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && \
   apt upgrade -y && \
-  apt install -y curl git jq libicu74 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales tzdata libgit2-dev && \
+  apt install -y curl git jq libicu70 zip wget apt-transport-https software-properties-common gnupg2 libssl3 libssl-dev openssl ca-certificates locales tzdata libgit2-dev && \
   rm -rf /var/lib/apt/lists/*
 
 #Set locale
@@ -35,16 +35,16 @@ RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-insta
 ENV PATH="$PATH:/usr/lib/dotnet"
 ENV DOTNET_ROOT="/usr/lib/dotnet"
 
+# Install Azure artifacts credential provider # uncomment if needed
+RUN wget -qO- https://aka.ms/install-artifacts-credprovider.sh | bash && \
+    sh -c "$(curl -fsSL https://aka.ms/install-artifacts-credprovider.sh)"
+
 # .NET global tools
 RUN mkdir -p /opt/Agents/tools && \
     dotnet tool install dotnet-affected --tool-path /opt/Agents/tools && \
     dotnet tool install Kros.DummyData.Initializer --tool-path /opt/Agents/tools && \
     dotnet tool install Kros.VariableSubstitution --tool-path /opt/Agents/tools
 ENV PATH="$PATH:/opt/Agents/tools"
-
-# Install Azure artifacts credential provider # uncomment if needed
-# RUN wget -qO- https://aka.ms/install-artifacts-credprovider.sh | bash && \
-#     sh -c "$(curl -fsSL https://aka.ms/install-artifacts-credprovider.sh)"
 
 # Installing GitHub CLI
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
