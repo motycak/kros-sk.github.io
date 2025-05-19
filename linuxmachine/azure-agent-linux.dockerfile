@@ -72,6 +72,10 @@ RUN wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsof
 # Installing Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
+# Configure Azure CLI and install azure-devops extension
+RUN az config set extension.dynamic_install_allow_preview=true && \
+    az extension add --name azure-devops
+
 # Installing Kubectl
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
