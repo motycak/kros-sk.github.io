@@ -89,6 +89,15 @@ ENV CYPRESS_CACHE_FOLDER="/opt/Agents/cache/cypress" \
     NUGET_PACKAGES="/opt/Agents/cache/nuget" \
     NX_CACHE_FOLDER="/opt/Agents/cache/nx"
 
+# Install Newman to tools/newman folder
+RUN mkdir -p /opt/Agents/tools/newman && \
+    mkdir -p /opt/Agents/tools/newman/node_modules && \
+    npm install -g newman && \
+    cp -r /usr/local/lib/node_modules/newman/* /opt/Agents/tools/newman/ && \
+    cp -r /usr/local/lib/node_modules/newman/node_modules/* /opt/Agents/tools/newman/node_modules/ && \
+    npm uninstall -g newman
+ENV PATH="$PATH:/opt/Agents/tools/newman"
+
 COPY start.sh .
 RUN chmod +x start.sh
 
