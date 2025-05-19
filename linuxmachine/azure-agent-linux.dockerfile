@@ -94,8 +94,8 @@ RUN mkdir -p /opt/Agents/tools/newman && \
     mkdir -p /opt/Agents/tools/newman/node_modules && \
     npm install -g newman && \
     NPM_ROOT=$(npm root -g) && \
-    cp -r $NPM_ROOT/newman/* /opt/Agents/tools/newman/ && \
-    cp -r $NPM_ROOT/newman/node_modules/* /opt/Agents/tools/newman/node_modules/ && \
+    cp -r $NPM_ROOT/newman /opt/Agents/tools/newman/node_modules/ && \
+    cp /usr/bin/newman* /opt/Agents/tools/newman/ && \
     npm uninstall -g newman
 ENV PATH="$PATH:/opt/Agents/tools/newman"
 
