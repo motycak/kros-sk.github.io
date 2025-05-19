@@ -39,7 +39,7 @@ RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-insta
 ENV PATH="$PATH:/usr/lib/dotnet"
 ENV DOTNET_ROOT="/usr/lib/dotnet"
 
-# Install Azure artifacts credential provider # uncomment if needed
+# Install Azure artifacts credential provider
 RUN wget -qO- https://aka.ms/install-artifacts-credprovider.sh | bash && \
     sh -c "$(curl -fsSL https://aka.ms/install-artifacts-credprovider.sh)"
 
