@@ -66,17 +66,6 @@ docker run -d -p 8000:8000 -p 9000:9000 --name portainer --restart=always -v /va
 
 Po inštaláci sa dá pristupovať na adrese `http://[ip_adresa]:9000`.
 
-## Inštalácia Cockpit
-
-Cockpit je jednoduché webové grafické rozhranie pre servery.
-
-```bash
-sudo apt install cockpit
-sudo systemctl enable --now cockpit.socket
-```
-
-Po inštalácii sa dá pristupovať na adrese `http://[ip_adresa]:9090`.
-
 ## Stiahnutie [kros-sk.github.io](https://github.com/Kros-sk/kros-sk.github.io) repozitára
 
 ```bash
