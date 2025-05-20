@@ -93,18 +93,6 @@ ENV CYPRESS_CACHE_FOLDER="/opt/Agents/cache/cypress" \
     NUGET_PACKAGES="/opt/Agents/cache/nuget" \
     NX_CACHE_FOLDER="/opt/Agents/cache/nx"
 
-# Install Newman to tools/newman folder (some problems)
-# RUN mkdir -p /opt/Agents/tools/newman && \
-#     mkdir -p /opt/Agents/tools/newman/node_modules && \
-#     npm install -g newman && \
-#     NPM_ROOT=$(npm root -g) && \
-#     cp -r $NPM_ROOT/newman /opt/Agents/tools/newman/node_modules/ && \
-#     cp /usr/bin/newman* /opt/Agents/tools/newman/ && \
-#     chmod +x /opt/Agents/tools/newman/newman && \
-#     ln -sf /opt/Agents/tools/newman/newman /opt/Agents/tools/newman/node_modules/newman/bin/newman && \
-#     npm uninstall -g newman
-# ENV PATH="$PATH:/opt/Agents/tools/newman"
-
 # Install Newman globally
 RUN npm install -g newman
 
