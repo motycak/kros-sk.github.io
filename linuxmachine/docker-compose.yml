@@ -51,6 +51,40 @@ services:
     deploy:
       restart_policy:
         condition: any
+  
+  agent4:
+    image: azure-agent-linux:latest
+    environment:
+      - AZP_URL=https://dev.azure.com/krossk
+      - AZP_AGENT_NAME=docker-04-build4
+      - AZP_POOL=Testing linux docker
+      - KUBECONFIG=/opt/Agents/docker-04-build4/kubeconfig
+      - DEVEXTREME_KEY=${DEVEXTREME_KEY}
+    volumes:
+      # - /opt/Agents/docker-04-build4:/opt/Agents/docker-04-build4 # Ak by sme potrebovali uchovavat workspaces aj po ukonceni kontajneru.
+      - /opt/Agents/cache:/opt/Agents/cache
+    secrets:
+      - azure_pat_token
+    deploy:
+      restart_policy:
+        condition: any
+  
+  agent5:
+    image: azure-agent-linux:latest
+    environment:
+      - AZP_URL=https://dev.azure.com/krossk
+      - AZP_AGENT_NAME=docker-05-build4
+      - AZP_POOL=Testing linux docker
+      - KUBECONFIG=/opt/Agents/docker-05-build4/kubeconfig
+      - DEVEXTREME_KEY=${DEVEXTREME_KEY}
+    volumes:
+      # - /opt/Agents/docker-05-build4:/opt/Agents/docker-05-build4 # Ak by sme potrebovali uchovavat workspaces aj po ukonceni kontajneru.
+      - /opt/Agents/cache:/opt/Agents/cache
+    secrets:
+      - azure_pat_token
+    deploy:
+      restart_policy:
+        condition: any
 
 secrets:
   azure_pat_token:
