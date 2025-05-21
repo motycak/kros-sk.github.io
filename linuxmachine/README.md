@@ -23,6 +23,14 @@ sudo apt install unattended-upgrades
 sudo dpkg-reconfigure --priority=low unattended-upgrades
 ```
 
+## Zníženie swappiness (optimalizácia pre RAM)
+
+```bash
+sudo nano /etc/sysctl.conf
+```
+
+Vložíme na koniec súboru `vm.swappiness=10` a uložíme.
+
 ## Inštalácia Docker
 
 Postupovať podľa oficiálnej dokumentácie: [Docker](https://docs.docker.com/engine/install/ubuntu/)
