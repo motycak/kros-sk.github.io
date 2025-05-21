@@ -56,8 +56,7 @@ print_header "Configuring Azure Pipelines agent..."
   --agent "$AZP_AGENT_NAME" \
   --work "${WORKDIR}/_work" \
   --replace \
-  --acceptTeeEula \
-  --add-capability "azureps=true"
+  --acceptTeeEula
 
 cleanup() {
   print_header "Removing agent..."
