@@ -69,6 +69,10 @@ RUN wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsof
     apt-get install -y powershell && \
     ln -s /usr/bin/pwsh /usr/bin/powershell
 
+# Installing Azure PowerShell
+RUN pwsh -Command "Set-PSRepository -Name PSGallery -InstallationPolicy Trusted" && \
+    pwsh -Command "Install-Module -Name Az -AllowClobber -Scope AllUsers -Force"
+
 # Installing Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
