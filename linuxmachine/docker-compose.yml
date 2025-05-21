@@ -9,7 +9,7 @@ services:
       - AZP_POOL=Testing linux docker
       - KUBECONFIG=/opt/Agents/docker-01-build4/kubeconfig
       - DEVEXTREME_KEY=${DEVEXTREME_KEY}
-      - AzurePS=3.0.1
+      # - AzurePS=3.0.1
     volumes:
       # - /opt/Agents/docker-01-build4:/opt/Agents/docker-01-build4 # Ak by sme potrebovali uchovavat workspaces aj po ukonceni kontajneru.
       - /opt/Agents/cache:/opt/Agents/cache
@@ -27,7 +27,7 @@ services:
       - AZP_POOL=Testing linux docker
       - KUBECONFIG=/opt/Agents/docker-02-build4/kubeconfig
       - DEVEXTREME_KEY=${DEVEXTREME_KEY}
-      - AzurePS=3.0.1
+      # - AzurePS=3.0.1
     volumes:
       # - /opt/Agents/docker-02-build4:/opt/Agents/docker-02-build4 # Ak by sme potrebovali uchovavat workspaces aj po ukonceni kontajneru.
       - /opt/Agents/cache:/opt/Agents/cache
@@ -45,7 +45,7 @@ services:
       - AZP_POOL=Testing linux docker
       - KUBECONFIG=/opt/Agents/docker-03-build4/kubeconfig
       - DEVEXTREME_KEY=${DEVEXTREME_KEY}
-      - AzurePS=3.0.1
+      # - AzurePS=3.0.1
     volumes:
       # - /opt/Agents/docker-03-build4:/opt/Agents/docker-03-build4 # Ak by sme potrebovali uchovavat workspaces aj po ukonceni kontajneru.
       - /opt/Agents/cache:/opt/Agents/cache
@@ -63,7 +63,7 @@ services:
       - AZP_POOL=Testing linux docker
       - KUBECONFIG=/opt/Agents/docker-04-build4/kubeconfig
       - DEVEXTREME_KEY=${DEVEXTREME_KEY}
-      - AzurePS=3.0.1
+      # - AzurePS=3.0.1
     volumes:
       # - /opt/Agents/docker-04-build4:/opt/Agents/docker-04-build4 # Ak by sme potrebovali uchovavat workspaces aj po ukonceni kontajneru.
       - /opt/Agents/cache:/opt/Agents/cache
@@ -81,7 +81,7 @@ services:
       - AZP_POOL=Testing linux docker
       - KUBECONFIG=/opt/Agents/docker-05-build4/kubeconfig
       - DEVEXTREME_KEY=${DEVEXTREME_KEY}
-      - AzurePS=3.0.1
+      # - AzurePS=3.0.1
     volumes:
       # - /opt/Agents/docker-05-build4:/opt/Agents/docker-05-build4 # Ak by sme potrebovali uchovavat workspaces aj po ukonceni kontajneru.
       - /opt/Agents/cache:/opt/Agents/cache
