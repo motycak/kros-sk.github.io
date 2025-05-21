@@ -104,6 +104,3 @@ COPY start.sh .
 RUN chmod +x start.sh
 
 ENTRYPOINT ["./start.sh"]
-
-# # 7-Zip
-# RUN apt-get install -y p7zip-full
