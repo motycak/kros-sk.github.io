@@ -82,7 +82,7 @@ git clone -b master https://github.com/Kros-sk/kros-sk.github.io.git
 
 Po naklonovaní na mašinu budeme môcť spustiť kontajnery pre Build Agentov. Všetko sa rieši cez docker-compose.
 
-## Vybuilovanie a spustenie kontajnerov
+## Build image
 
 Vybudovanie image podla [azure-agent-linux.dockerfile](azure-agent-linux.dockerfile).
 
@@ -90,15 +90,55 @@ Vybudovanie image podla [azure-agent-linux.dockerfile](azure-agent-linux.dockerf
 docker build -t azure-agent-linux:latest -f azure-agent-linux.dockerfile . 
 ```
 
-Deployovanie kontajnerov cez [docker-compose.yml](docker-compose.yml).
+## Spustenie kontajnerov
+
+Na spustenie kontajnerov vieme použiť 2 prístupy:
+
+1. Docker compose
+2. Orchestrácia kontajnerov
+
+### Docker compose
+
+Pre každý pool je samostatný docker-compose súbor. V ňom sú definovaní build agenti pre daný pool.
+Každý z nich treba nasadiť do tzv. stacku. Docker compose súbory pre jednotlivé pooly:
+
+- Build BE: [docker-compose-build-be.yml](docker-compose-build-be.yml)
+- Build FE: [docker-compose-build-fe.yml](docker-compose-build-fe.yml)
+- Deploy BE: [docker-compose-deploy-be.yml](docker-compose-deploy-be.yml)
+- Deploy FE: [docker-compose-deploy-fe.yml](docker-compose-deploy-fe.yml)
+- Default: [docker-compose-default.yml](docker-compose-default.yml)
+
+```bash
+docker stack deploy -c docker-compose-build-be.yml build_be_stack -d
+docker stack deploy -c docker-compose-build-fe.yml build_fe_stack -d
+docker stack deploy -c docker-compose-deploy-be.yml deploy_be_stack -d
+docker stack deploy -c docker-compose-deploy-fe.yml deploy_fe_stack -d
+docker stack deploy -c docker-compose-default.yml default_stack -d
+```
+
+Vypnutie kontajnerov:
+
+```bash
+docker stack rm build_be_stack
+docker stack rm build_fe_stack
+docker stack rm deploy_be_stack
+docker stack rm deploy_fe_stack
+docker stack rm default_stack
+```
+
+### Testing TEMP
 
 ```bash
 docker stack deploy -c docker-compose.yml build_agents_stack -d
 docker stack ls # zobraziť stacky
 ```
 
-## Vypnutie kontajnerov
+Vypnutie kontajnerov:
 
 ```bash
 docker stack rm build_agents_stack
 ```
+
+### Orchestrácia kontajnerov TODO (kubernetes/docker swarm)
+
+Máme nad správaním kontajnerov väčšiu kontrolu a viac možností. TODO pokračovať.
