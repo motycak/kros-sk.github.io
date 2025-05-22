@@ -1,14 +1,26 @@
 #!/bin/bash
 set -e
 
+print_header() {
+  lightcyan="\033[1;36m"
+  nocolor="\033[0m"
+  echo -e "\n${lightcyan}$1${nocolor}\n"
+}
+
+print_info() {
+  lightgreen="\033[1;32m"
+  nocolor="\033[0m"
+  echo -e "${lightgreen}$1${nocolor}"
+}
+
 # Funkcia pre extrakciu čísla z hostname
 get_node_id() {
-    # Extrahujeme číslo z hostname (napr. z "agents.1.abc123" dostaneme "1")
     print_header "Extracting node ID from hostname..."
     local task_number=$(echo $HOSTNAME | grep -o '[0-9]*$')
     
     # Ak sa nám nepodarilo extrahovať číslo, použijeme náhodné
     if [ -z "$task_number" ]; then
+        print_info "Could not extract node ID from hostname, using random number"
         task_number=$(shuf -i 1-999 -n 1)
     fi
     
@@ -23,18 +35,18 @@ replace_node_id() {
     if [[ "$var_value" == *"\${NODE_ID}"* ]]; then
         local node_id=$(get_node_id)
         export "$var_name"=$(echo "$var_value" | sed "s/\${NODE_ID}/$node_id/g")
-        echo "Updated $var_name: ${!var_name}"
+        print_info "Updated $var_name: ${!var_name}"
     fi
 }
 
 # Nahradíme ${NODE_ID} v AZP_AGENT_NAME
 node_id=$(get_node_id)
-echo "Using node ID: $node_id"
+print_info "Using node ID: $node_id"
 replace_node_id "AZP_AGENT_NAME"
 
 # Nastavíme KUBECONFIG na základe AZP_AGENT_NAME
 export KUBECONFIG="/opt/Agents/${AZP_AGENT_NAME}/kubeconfig"
-echo "Set KUBECONFIG: $KUBECONFIG"
+print_info "Set KUBECONFIG: $KUBECONFIG"
 
 # Načítanie tokenu zo secretu
 export AZP_TOKEN=$(cat /run/secrets/azure_pat_token)
@@ -50,12 +62,6 @@ mkdir -p ${WORKDIR}
 cd ${WORKDIR}
 
 export AGENT_ALLOW_RUNASROOT=1
-
-print_header() {
-  lightcyan="\033[1;36m"
-  nocolor="\033[0m"
-  echo -e "\n${lightcyan}$1${nocolor}\n"
-}
 
 # Let the agent ignore the token env variables
 export VSO_AGENT_IGNORE="AZP_TOKEN"
