@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  deploy-fe-01-docker:
+    image: azure-agent-linux:latest
+    environment:
+      - AZP_URL=https://dev.azure.com/krossk
+      - AZP_AGENT_NAME=deploy-fe-01-docker
+      - AZP_POOL=Deploy FE
+      - KUBECONFIG=/opt/Agents/deploy-fe-01-docker/kubeconfig
+      - DEVEXTREME_KEY=${DEVEXTREME_KEY}
+      - AzurePS=3.0.1
+    volumes:
+      #- /opt/Agents/deploy-fe-01-docker:/opt/Agents/deploy-fe-01-docker # Ak by sme potrebovali uchovavat workspaces aj po ukonceni kontajneru.
+      - /opt/Agents/cache:/opt/Agents/cache
+    secrets:
+      - azure_pat_token
+    deploy:
+      restart_policy:
+        condition: any
+
+  deploy-fe-02-docker:
+    image: azure-agent-linux:latest
+    environment:
+      - AZP_URL=https://dev.azure.com/krossk
+      - AZP_AGENT_NAME=deploy-fe-02-docker
+      - AZP_POOL=Deploy FE
+      - KUBECONFIG=/opt/Agents/deploy-fe-02-docker/kubeconfig
+      - DEVEXTREME_KEY=${DEVEXTREME_KEY}
+      - AzurePS=3.0.1
+    volumes:
+      #- /opt/Agents/deploy-fe-02-docker:/opt/Agents/deploy-fe-02-docker # Ak by sme potrebovali uchovavat workspaces aj po ukonceni kontajneru.
+      - /opt/Agents/cache:/opt/Agents/cache
+    secrets:
+      - azure_pat_token
+    deploy:
+      restart_policy:
+        condition: any
+
+secrets:
+  azure_pat_token:
+    external: true 
