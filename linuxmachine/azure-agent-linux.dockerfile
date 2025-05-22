@@ -102,5 +102,6 @@ RUN npm install -g newman
 
 COPY start.sh .
 RUN chmod +x start.sh
+#comment
 
 ENTRYPOINT ["./start.sh"]
