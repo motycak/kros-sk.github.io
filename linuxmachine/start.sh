@@ -15,7 +15,7 @@ print_info() {
 
 # Funkcia pre extrakciu čísla z hostname
 get_node_id() {
-    print_header "Extracting node ID from hostname..."
+    print_header "Extracting node ID from hostname $HOSTNAME"
     local task_number=$(echo $HOSTNAME | grep -o '[0-9]*$')
     
     # Ak sa nám nepodarilo extrahovať číslo, použijeme náhodné
