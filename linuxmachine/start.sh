@@ -1,6 +1,40 @@
 #!/bin/bash
 set -e
 
+# Funkcia pre extrakciu čísla z hostname
+get_node_id() {
+    # Extrahujeme číslo z hostname (napr. z "agents.1.abc123" dostaneme "1")
+    local task_number=$(echo $HOSTNAME | grep -o '[0-9]*$')
+    
+    # Ak sa nám nepodarilo extrahovať číslo, použijeme náhodné
+    if [ -z "$task_number" ]; then
+        task_number=$(shuf -i 1-999 -n 1)
+    fi
+    
+    # Formátujeme na dvojciferné číslo
+    printf '%02d' $task_number
+}
+
+# Funkcia na nahradenie ${NODE_ID} v premennej
+replace_node_id() {
+    local var_name=$1
+    local var_value="${!var_name}"
+    if [[ "$var_value" == *"\${NODE_ID}"* ]]; then
+        local node_id=$(get_node_id)
+        export "$var_name"=$(echo "$var_value" | sed "s/\${NODE_ID}/$node_id/g")
+        echo "Updated $var_name: ${!var_name}"
+    fi
+}
+
+# Nahradíme ${NODE_ID} v AZP_AGENT_NAME
+node_id=$(get_node_id)
+echo "Using node ID: $node_id"
+replace_node_id "AZP_AGENT_NAME"
+
+# Nastavíme KUBECONFIG na základe AZP_AGENT_NAME
+export KUBECONFIG="/opt/Agents/${AZP_AGENT_NAME}/kubeconfig"
+echo "Set KUBECONFIG: $KUBECONFIG"
+
 # Načítanie tokenu zo secretu
 export AZP_TOKEN=$(cat /run/secrets/azure_pat_token)
 
