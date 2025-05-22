@@ -4,7 +4,7 @@ set -e
 # Funkcia pre extrakciu čísla z hostname
 get_node_id() {
     # Extrahujeme číslo z hostname (napr. z "agents.1.abc123" dostaneme "1")
-    print_header "Extracting node ID from hostname..."
+    echo "HOSTNAME: $HOSTNAME"
     local task_number=$(echo $HOSTNAME | grep -o '[0-9]*$')
     
     # Ak sa nám nepodarilo extrahovať číslo, použijeme náhodné
