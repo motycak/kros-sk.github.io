@@ -88,7 +88,6 @@ echo "Downloading Azure Pipelines agent version $AGENT_VERSION"
 curl -LsS "https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-${TARGETARCH}-${AGENT_VERSION}.tar.gz" | tar -xz
 
 print_header "Configuring Azure Pipelines agent..."
-print_header "AZP_AGENT_NAME: $AZP_AGENT_NAME"
 
 ./config.sh --unattended \
   --url "$AZP_URL" \
