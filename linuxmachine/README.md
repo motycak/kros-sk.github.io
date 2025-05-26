@@ -142,3 +142,19 @@ docker stack rm build_agents_stack
 ### Orchestrácia kontajnerov TODO (kubernetes/docker swarm)
 
 Máme nad správaním kontajnerov väčšiu kontrolu a viac možností. TODO pokračovať.
+
+## Inštalácia Kubernetes
+
+Postupovať podľa oficiálnej dokumentácie: [Kubernetes](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
+
+<!-- ## Vytvorenie clusteru
+
+Nainštalovať [minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fbinary+download)
+
+Vytvoriť cluster:
+
+```bash
+minikube start
+``` -->
+
+
