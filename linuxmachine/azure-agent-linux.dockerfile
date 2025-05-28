@@ -103,4 +103,5 @@ RUN npm install -g newman
 COPY start.sh .
 RUN chmod +x start.sh
 
+#zmenit na start-k8s.sh pre kubernetes
 ENTRYPOINT ["./start.sh"]
