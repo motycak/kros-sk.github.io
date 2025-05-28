@@ -100,8 +100,8 @@ ENV CYPRESS_CACHE_FOLDER="/opt/Agents/cache/cypress" \
 # Install Newman globally
 RUN npm install -g newman
 
-COPY start.sh .
-RUN chmod +x start.sh
+COPY start-k8s.sh .
+RUN chmod +x start-k8s.sh
 
 #zmenit na start-k8s.sh pre kubernetes
-ENTRYPOINT ["./start.sh"]
+ENTRYPOINT ["./start-k8s.sh"]
