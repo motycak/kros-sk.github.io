@@ -168,5 +168,3 @@ kubectl apply --server-side -f https://github.com/kedacore/keda/releases/downloa
 ```bash
 kubectl delete --purge keda
 ```
-
-

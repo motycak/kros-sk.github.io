@@ -53,6 +53,11 @@ spec:
       containers:
       - name: build-agent
         image: azure-agent-linux:latest
+        env:
+        - name: AZP_AGENT_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         envFrom:
         - configMapRef:
             name: build-agent-config-${pool}
@@ -73,30 +78,26 @@ spec:
         persistentVolumeClaim:
           claimName: agent-cache-pvc-${pool}
 ---
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
 metadata:
-  name: build-agent-hpa-${pool}
+  name: build-agent-keda-${pool}
 spec:
   scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
     name: build-agent-${pool}
-  minReplicas: ${min}
-  maxReplicas: ${max}
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 80
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80
+    kind: Deployment
+  pollingInterval: 30
+  cooldownPeriod: 300
+  minReplicaCount: ${min}
+  maxReplicaCount: ${max}
+  triggers:
+  - type: azure-pipelines
+    metadata:
+      organizationURLFromEnv: "AZURE_DEVOPS_URL"
+      personalAccessTokenFromEnv: "AZURE_PAT_TOKEN"
+      targetPipelinesQueueLength: "1"
+      activationThreshold: "1"
+      targetPipelinesPoolID: "${pool}"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
