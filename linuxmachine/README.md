@@ -169,6 +169,12 @@ minikube start
 kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.17.0/keda-2.17.0-core.yaml
 ```
 
+## Build image s tagom pre Kubernetes
+
+```bash
+docker build -t azure-agent-linux:k8s -f azure-agent-linux.dockerfile .
+```
+
 ## Vytvorenie podov s build agentmi
 
 Aplikovanie všeobecného manifestu a potom poolové manifesty.
