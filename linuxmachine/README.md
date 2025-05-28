@@ -147,7 +147,7 @@ Máme nad správaním kontajnerov väčšiu kontrolu a viac možností. TODO pok
 
 Postupovať podľa oficiálnej dokumentácie: [Kubernetes](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
 
-<!-- ## Vytvorenie clusteru
+## Vytvorenie clusteru
 
 Nainštalovať [minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fbinary+download)
 
@@ -155,6 +155,18 @@ Vytvoriť cluster:
 
 ```bash
 minikube start
-``` -->
+```
+
+## Nainštalovanie KEDA
+
+```bash
+kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.17.0/keda-2.17.0-core.yaml
+```
+
+## Odinštalovanie KEDA
+
+```bash
+kubectl delete --purge keda
+```
 
 
