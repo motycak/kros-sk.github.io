@@ -1,60 +1,67 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: build-agent-config
+  name: build-agent-config-build-be
 data:
-  AZURE_DEVOPS_URL: "https://dev.azure.com/kros-sk"
-  AGENT_POOL_NAME: "build-be"  # Toto sa bude meniť pre každý pool
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: azure-pat-token
-type: Opaque
-data:
-  AZURE_PAT_TOKEN: ${AZURE_PAT_TOKEN_BASE64}  # Treba zakódovať PAT token do base64
+  AZP_URL: "https://dev.azure.com/krossk"
+  AZP_POOL: "Build BE"
+  DEVEXTREME_KEY: "${DEVEXTREME_KEY}"
+  AzurePS: "3.0.1"
+# --- 2. spôsob ako vytvoriť secret s PAT tokenom
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: azure-pat-token
+# type: Opaque
+# data:
+#   AZURE_PAT_TOKEN: ${AZURE_PAT_TOKEN_BASE64}  # Treba zakódovať PAT token do base64
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: build-agent-pool
+  name: build-be
   labels:
-    app: build-agent
+    app: build-agent-build-be
     pool: build-be
 spec:
-  replicas: 2  # Počiatočný počet agentov
+  replicas: 2
   selector:
     matchLabels:
-      app: build-agent
+      app: build-agent-build-be
       pool: build-be
   template:
     metadata:
       labels:
-        app: build-agent
+        app: build-agent-build-be
         pool: build-be
     spec:
       containers:
-      - name: build-agent
+      - name: build-be-container
         image: azure-agent-linux:latest
+        env:
+        - name: AZP_AGENT_NAME
+          value: "$(metadata.name)-build4"
+        - name: KUBECONFIG
+          value: "/opt/Agents/$(metadata.name)-build4/kubeconfig"
         envFrom:
         - configMapRef:
-            name: build-agent-config
+            name: build-agent-config-build-be
         - secretRef:
             name: azure-pat-token
-        resources:
-          requests:
-            cpu: "500m"
-            memory: "1Gi"
-          limits:
-            cpu: "1000m"
-            memory: "2Gi"
+        # resources:
+        #   requests:
+        #     cpu: "500m"
+        #     memory: "1Gi"
         volumeMounts:
         - name: agent-cache
           mountPath: /opt/Agents/cache
       volumes:
       - name: agent-cache
         persistentVolumeClaim:
-          claimName: agent-cache-pvc
+          claimName: agent-cache-pvc-build-be
+      - name: kubeconfig
+        secret:
+          secretName: kubeconfig-build-be
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
