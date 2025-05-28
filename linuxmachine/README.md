@@ -143,15 +143,15 @@ docker stack rm build_agents_stack
 
 Máme nad správaním kontajnerov väčšiu kontrolu a viac možností. TODO pokračovať.
 
+## Inštalácia Kubernetes
+
+Postupovať podľa oficiálnej dokumentácie: [Kubernetes](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
+
 ## Vytvorenie secretu s PAT tokenom
 
 ```bash
 kubectl create secret generic azure-pat-token --from-literal=AZURE_PAT_TOKEN=<VYGENEROVANY_TOKEN>
 ```
-
-## Inštalácia Kubernetes
-
-Postupovať podľa oficiálnej dokumentácie: [Kubernetes](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
 
 ## Vytvorenie clusteru
 
@@ -167,6 +167,37 @@ minikube start
 
 ```bash
 kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.17.0/keda-2.17.0-core.yaml
+```
+
+## Vytvorenie podov s build agentmi
+
+Aplikovanie všeobecného manifestu a potom poolové manifesty.
+
+```bash
+kubectl apply -f k8s/common-pool-manifest.yaml
+kubectl apply -f k8s/build-be-pool-manifest.yaml # TODO a podobne pre ostatné pooly
+```
+
+Overenie, či sú pody spustené:
+
+```bash
+kubectl get pods
+kubectl get pvc
+kubectl get scaledobject
+```
+
+## Odstránenie
+
+Odstránenie konkrétneho poolu:
+
+```bash
+kubectl delete -f k8s/build-be-pool-manifest.yaml
+```
+
+Odstránenie spoločného manifestu:
+
+```bash
+kubectl delete -f k8s/common-pool-manifest.yaml
 ```
 
 ## Odinštalovanie KEDA
