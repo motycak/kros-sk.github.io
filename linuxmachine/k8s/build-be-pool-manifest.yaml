@@ -64,5 +64,6 @@ spec:
     metadata:
       poolName: "Build BE"
       organizationURLFromEnv: "AZP_URL"
-      personalAccessTokenFromEnv: "AZURE_PAT_TOKEN"
       targetPipelinesQueueLength: "1"
+    authenticationRef:
+      name: azure-pipelines-trigger-auth
