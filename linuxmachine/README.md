@@ -143,6 +143,12 @@ docker stack rm build_agents_stack
 
 Máme nad správaním kontajnerov väčšiu kontrolu a viac možností. TODO pokračovať.
 
+## Vytvorenie secretu s PAT tokenom
+
+```bash
+kubectl create secret generic azure-pat-token --from-literal=AZURE_PAT_TOKEN=<VYGENEROVANY_TOKEN>
+```
+
 ## Inštalácia Kubernetes
 
 Postupovať podľa oficiálnej dokumentácie: [Kubernetes](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
