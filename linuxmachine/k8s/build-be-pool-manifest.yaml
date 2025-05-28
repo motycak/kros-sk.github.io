@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
       - name: build-be-container
-        image: azure-agent-linux:latest
+        image: azure-agent-linux:k8s
         env:
         - name: AZP_AGENT_NAME
           value: "$(metadata.name)-build4"
