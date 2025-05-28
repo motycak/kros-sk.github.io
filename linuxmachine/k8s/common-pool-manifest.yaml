@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: build-agent-config-common
+data:
+  AZP_URL: "https://dev.azure.com/krossk"
+  AzurePS: "3.0.1"
+  DEVEXTREME_KEY: "${DEVEXTREME_KEY}"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agent-cache-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: standard 
