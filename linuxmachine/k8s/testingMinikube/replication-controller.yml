@@ -15,7 +15,7 @@ spec:
         part: frontend
     spec:
       containers:
-        - name: webserver-container
-          image: nginx:latest
-          ports:
-        - containerPort: 80
+      - name: webserver-container
+        image: nginx:latest
+        ports:
+      - containerPort: 80
