@@ -195,21 +195,28 @@ kubectl apply --server-side -f https://github.com/kedacore/keda/releases/downloa
 docker build -t azure-agent-linux:k8s -f azure-agent-linux.dockerfile .
 ```
 
+## Vytvorenie namespace
+
+```bash
+kubectl create namespace build-agents
+```
+
 ## Vytvorenie podov s build agentmi
 
 Aplikovanie všeobecného manifestu a potom poolové manifesty.
 
 ```bash
-kubectl apply -f k8s/common-pool-manifest.yaml
-kubectl apply -f k8s/build-be-pool-manifest.yaml # TODO a podobne pre ostatné pooly
+kubectl apply -f k8s/common-pool-manifest.yaml -n build-agents
+kubectl apply -f k8s/build-be-pool-manifest.yaml -n build-agents # TODO a podobne pre ostatné pooly
 ```
 
 Overenie, či sú pody spustené:
 
 ```bash
-kubectl get pods
-kubectl get pvc
-kubectl get scaledobject
+kubectl get pods -n build-agents
+kubectl get pvc -n build-agents
+kubectl get configmap -n build-agents
+kubectl get scaledobject -n build-agents
 ```
 
 ## Odstránenie
@@ -217,13 +224,13 @@ kubectl get scaledobject
 Odstránenie konkrétneho poolu:
 
 ```bash
-kubectl delete -f k8s/build-be-pool-manifest.yaml
+kubectl delete -f k8s/build-be-pool-manifest.yaml -n build-agents
 ```
 
 Odstránenie spoločného manifestu:
 
 ```bash
-kubectl delete -f k8s/common-pool-manifest.yaml
+kubectl delete -f k8s/common-pool-manifest.yaml -n build-agents
 ```
 
 ## Odinštalovanie KEDA
