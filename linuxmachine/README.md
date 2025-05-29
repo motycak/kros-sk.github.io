@@ -155,18 +155,32 @@ kubectl create secret generic azure-pat-token --from-literal=AZURE_PAT_TOKEN=<VY
 
 ## Vytvorenie clusteru
 
+### Minikube
+
 Nainštalovať [minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fbinary+download)
 
 ```bash
 minikube start
 ```
 
-ALternatívy namiesto minikube:
+Zmazanie clusteru:
 
-# K3s
+```bash
+minikube delete --all
+```
+
+### Alternatíva K3s
 
 ```bash
 curl -sfL https://get.k3s.io | sh
+```
+
+Po nainštalovaní bude K3s služba nakonfigurovaná aby sa automaticky reštartovala po reboote nodu alebo v prípade zlyhania či ukončenia procesu.
+
+Zmazanie clusteru (odinštalovanie):
+
+```bash
+/usr/local/bin/k3s-uninstall.sh
 ```
 
 ## Nainštalovanie KEDA
