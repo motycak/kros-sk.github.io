@@ -157,10 +157,16 @@ kubectl create secret generic azure-pat-token --from-literal=AZURE_PAT_TOKEN=<VY
 
 Nainštalovať [minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fbinary+download)
 
-Vytvoriť cluster:
-
 ```bash
 minikube start
+```
+
+ALternatívy namiesto minikube:
+
+# K3s
+
+```bash
+curl -sfL https://get.k3s.io | sh
 ```
 
 ## Nainštalovanie KEDA
