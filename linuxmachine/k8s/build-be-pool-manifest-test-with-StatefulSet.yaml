@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: build-agent-config-build-be
+data:
+  AZP_POOL: "Build BE"
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: build-be-deployment
+  labels:
+    app: build-agent-build-be-deployment
+    pool: build-be
+spec:
+  serviceName: build-be
+  replicas: 2
+  selector:
+    matchLabels:
+      app: build-agent-build-be
+      pool: build-be
+  template:
+    metadata:
+      labels:
+        app: build-agent-build-be
+        pool: build-be
+    spec:
+      containers:
+      - name: build-be-container
+        image: azure-agent-linux:k8s
+        env:
+        - name: AZP_AGENT_NAME
+          value: "build-be-$(POD_NAME)"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: KUBECONFIG
+          value: "/opt/Agents/$(metadata.name)/kubeconfig"
+        envFrom:
+        - configMapRef:
+            name: build-agent-config-common
+        - configMapRef:
+            name: build-agent-config-build-be
+        - secretRef:
+            name: azure-pat-token
+        volumeMounts:
+        - name: agent-cache
+          mountPath: /opt/Agents/cache
+      volumes:
+      - name: agent-cache
+        persistentVolumeClaim:
+          claimName: agent-cache-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: build-be
+spec:
+  clusterIP: None
+  selector:
+    app: build-agent-build-be
+    pool: build-be
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: build-be-scaledObject
+spec:
+  scaleTargetRef:
+    name: build-be-deployment
+    kind: StatefulSet
+  pollingInterval: 30
+  cooldownPeriod: 300
+  minReplicaCount: 2
+  maxReplicaCount: 4
+  triggers:
+  - type: azure-pipelines
+    metadata:
+      poolName: "Build BE"
+      organizationURLFromEnv: "AZP_URL"
+      targetPipelinesQueueLength: "1"
+    authenticationRef:
+      name: azure-pipelines-trigger-auth
