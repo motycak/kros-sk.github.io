@@ -6,12 +6,12 @@ metadata:
     app: moja-app
 spec:
   containers:
-    - name: moj-data-container
+    - name: frontend
       image: nginx:latest
       volumeMounts:
-        - name: moj-data-volume
-          mountPath: /data
+        - name: frontend-pod
+          mountPath: /var/www/html
   volumes:
-    - name: moj-data-volume
+    - name: frontend-pod
       persistentVolumeClaim:
         claimName: moj-pvc
