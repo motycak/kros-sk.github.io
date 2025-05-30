@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: moj-data-pod
+  labels:
+    app: moja-app
+spec:
+  containers:
+    - name: moj-data-container
+      image: nginx:latest
+      volumeMounts:
+        - name: moj-data-volume
+          mountPath: /data
+  volumes:
+    - name: moj-data-volume
+      persistentVolumeClaim:
+        claimName: moj-pvc
