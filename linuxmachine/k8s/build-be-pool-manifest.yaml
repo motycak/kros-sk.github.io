@@ -10,7 +10,7 @@ kind: Deployment
 metadata:
   name: build-be
   labels:
-    app: build-agent-build-be
+    app: build-agent-build-be-deployment
     pool: build-be
 spec:
   replicas: 2
