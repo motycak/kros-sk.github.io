@@ -8,7 +8,7 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: build-be
+  name: build-be-deployment
   labels:
     app: build-agent-build-be-deployment
     pool: build-be
@@ -20,6 +20,7 @@ spec:
       pool: build-be
   template:
     metadata:
+      name: build-be
       labels:
         app: build-agent-build-be
         pool: build-be
@@ -53,7 +54,7 @@ metadata:
   name: build-be-scaledObject
 spec:
   scaleTargetRef:
-    name: build-be
+    name: build-be-deployment
     kind: Deployment
   pollingInterval: 30
   cooldownPeriod: 300
