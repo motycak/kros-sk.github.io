@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: moja-app-command-args
+  labels:
+    app: moja-app
+spec:
+  containers:
+  - name: sh
+    image: busybox
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo 'Hello, World!'; date; sleep 5; done"]
+  restartPolicy: OnFailure
