@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moje-ws
+  labels:
+    app: moja-app
+    part: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: moja-app
+  template:
+    metadata:
+      name: moja-app-pod
+      labels:
+        app: moja-app
+        part: frontend
+    spec:
+      containers:
+      - name: webserver-container
+        image: nginx:1.19
+        ports:
+        - containerPort: 80
