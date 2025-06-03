@@ -185,6 +185,8 @@ Zmazanie clusteru (odinštalovanie):
 
 ## Nainštalovanie KEDA
 
+Pomocou KEDA sa dá automaticky škálovať počet agentov v závislosti na počte čakajúcich úloh v Azure DevOps.
+
 ```bash
 kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.17.0/keda-2.17.0-core.yaml
 ```
