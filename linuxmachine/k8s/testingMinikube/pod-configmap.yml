@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: moja-app-cm
+  labels:
+    app: moja-app
+    part: frontend
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["echo"]
+    args: ["$(TYPE)"]
+    envFrom:
+    - configMapRef:
+        name: moj-config
