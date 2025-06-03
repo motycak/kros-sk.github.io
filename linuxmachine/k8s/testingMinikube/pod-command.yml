@@ -10,4 +10,4 @@ spec:
     image: busybox
     command: ["echo"]
     args: ["Hello, World!"]
-  restart_policy: "OnFailure"
+  restartPolicy: OnFailure
