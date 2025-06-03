@@ -30,11 +30,7 @@ spec:
         image: azure-agent-linux:k8s
         env:
         - name: AZP_AGENT_NAME
-          value: "build-be-$(POD_NAME)"
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
+          value: "$(metadata.name)-build4"
         - name: KUBECONFIG
           value: "/opt/Agents/$(metadata.name)/kubeconfig"
         envFrom:
