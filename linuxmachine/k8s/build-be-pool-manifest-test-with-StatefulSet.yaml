@@ -41,7 +41,7 @@ spec:
         - configMapRef:
             name: build-agent-config-build-be
         - secretRef:
-            name: azure-pat-token
+            name: azure-pat-token # TODO: Overiť či dokážem pristúpiť v star-k8s.sh v kontajneri na secret.
         volumeMounts:
         - name: agent-cache
           mountPath: /opt/Agents/cache
