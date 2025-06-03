@@ -34,7 +34,7 @@ spec:
         - name: AZP_AGENT_NAME
           value: "$(metadata.name)-build4"
         - name: KUBECONFIG
-          value: "/opt/Agents/$(metadata.name)/kubeconfig"
+          value: "/opt/Agents/$(AZP_AGENT_NAME)/kubeconfig"
         envFrom:
         - configMapRef:
             name: build-agent-config-common
