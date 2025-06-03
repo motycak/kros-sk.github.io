@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: moja-app-pod
+  labels:
+    app: moja-app
+    part: frontend
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zakaznicka-app-pod
+  labels:
+    app: zakaznicka-app
+    part: frontend
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zakaznicka-app-pod-db
+  labels:
+    app: zakaznicka-app
+    part: db
+spec:
+  containers:
+  - name: mariadb
+    image: mariadb:latest
+    imagePullPolicy: "Always"
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: password
+    ports:
+    - containerPort: 3306
