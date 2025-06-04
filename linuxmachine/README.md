@@ -147,6 +147,18 @@ Máme nad správaním kontajnerov väčšiu kontrolu a viac možností. TODO pok
 
 Postupovať podľa oficiálnej dokumentácie: [Kubernetes](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
 
+## Inštalácia Helm
+
+Helm je správcovský nástroj pre Kubernetes.
+
+```bash
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+sudo apt-get install apt-transport-https --yes
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+```
+
 ## Kubernetes Dashboard
 
 Ak chceme prisupovať vzdialene tak treba najprv nainštalovať na mašine dashboard, vytvoriť proxy prístup a následne ssh tunel.
