@@ -147,6 +147,25 @@ Máme nad správaním kontajnerov väčšiu kontrolu a viac možností. TODO pok
 
 Postupovať podľa oficiálnej dokumentácie: [Kubernetes](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
 
+## Kubernetes Dashboard
+
+Ak chceme prisupovať vzdialene tak treba najprv nainštalovať na mašine dashboard, vytvoriť proxy prístup a následne ssh tunel.
+
+### Inštalácia
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
+```
+
+### Nastavenie vzdialeného prístupu
+
+```bash
+kubectl proxy --address='0.0.0.0' --accept-hosts='^.*' --port=8001
+ssh -L 8001:localhost:8001 [meno_uzivatela]@[ip_adresa_masiny] #napr. ssh -L 8001:localhost:8001 kostelej@192.168.2.213
+```
+
+Následne na svojom počítači pristupovať v prehliadači cez `http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/`.
+
 ## Vytvorenie secretu s PAT tokenom
 
 ```bash
