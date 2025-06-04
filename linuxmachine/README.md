@@ -159,6 +159,18 @@ sudo apt-get update
 sudo apt-get install helm
 ```
 
+## Inštalácia K9s
+
+K9s je prehľadný nástroj pre správu Kubernetes.
+
+```bash
+curl -Lo k9s.tar.gz https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_amd64.tar.gz
+tar -xvf k9s.tar.gz
+chmod +x k9s
+sudo mv k9s /usr/local/bin/
+k9s version # overiť inštaláciu
+```
+
 ## Vytvorenie secretu s PAT tokenom
 
 ```bash
