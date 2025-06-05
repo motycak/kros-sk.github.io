@@ -16,7 +16,7 @@ spec:
   serviceName: testing-linux-docker-service
   replicas: 2
   ordinals:
-    - start: 1
+    start: 1
   selector:
     matchLabels:
       app: build-agent-testing-linux-docker

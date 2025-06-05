@@ -16,7 +16,7 @@ spec:
   serviceName: build-be
   replicas: 2
   ordinals:
-    - start: 1
+    start: 1
   selector:
     matchLabels:
       app: build-agent-build-be
