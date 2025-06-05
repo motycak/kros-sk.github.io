@@ -5,7 +5,6 @@ metadata:
 data:
   AZP_URL: "https://dev.azure.com/krossk"
   AzurePS: "3.0.1"
-  DEVEXTREME_KEY: "${DEVEXTREME_KEY}"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

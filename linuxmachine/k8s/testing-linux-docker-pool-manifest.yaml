@@ -44,6 +44,11 @@ spec:
             secretKeyRef:
               name: azure-pat-token
               key: AZURE_PAT_TOKEN
+        - name: DEVEXTREME_KEY
+          valueFrom:
+            secretKeyRef:
+              name: devextreme-key
+              key: DEVEXTREME_KEY
         envFrom:
         - configMapRef:
             name: build-agent-config-common

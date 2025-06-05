@@ -173,8 +173,11 @@ k9s version # overiť inštaláciu
 
 ## Vytvorenie secretu s PAT tokenom
 
+pridať AZURE_PAT_TOKEN a DEVEXTREME_KEY do secretov
+
 ```bash
 kubectl create secret generic azure-pat-token --from-literal=AZURE_PAT_TOKEN=<VYGENEROVANY_TOKEN>
+kubectl create secret generic devextreme-key --from-literal=DEVEXTREME_KEY=<VYGENEROVANY_KEY>
 ```
 
 ## Vytvorenie clusteru
