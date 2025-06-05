@@ -8,7 +8,7 @@ data:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: testing-linux-docker-statefulset
+  name: testing-linux-docker
   labels:
     app: build-agent-testing-linux-docker-statefulset
     pool: testing-linux-docker
