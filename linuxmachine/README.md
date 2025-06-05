@@ -225,6 +225,7 @@ docker build -t azure-agent-linux:k8s -f azure-agent-linux.dockerfile .
 
 ```bash
 kubectl create namespace build-agents
+kubectl config set-context --current --namespace=build-agents # Nastavenie defaultneho namespace
 ```
 
 ## Vytvorenie podov s build agentmi
