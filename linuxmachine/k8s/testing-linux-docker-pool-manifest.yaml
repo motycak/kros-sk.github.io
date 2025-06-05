@@ -75,7 +75,7 @@ spec:
   triggers:
   - type: azure-pipelines
     metadata:
-      poolName: "Build BE"
+      poolName: "Testing linux docker"
       organizationURLFromEnv: "AZP_URL"
       targetPipelinesQueueLength: "1"
     authenticationRef:
