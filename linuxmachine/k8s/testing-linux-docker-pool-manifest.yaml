@@ -39,13 +39,16 @@ spec:
           value: "$(POD_NAME)-build4"
         - name: KUBECONFIG
           value: "/opt/Agents/$(AZP_AGENT_NAME)/kubeconfig"
+        - name: AZURE_PAT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: azure-pat-token
+              key: AZURE_PAT_TOKEN
         envFrom:
         - configMapRef:
             name: build-agent-config-common
         - configMapRef:
             name: build-agent-config-testing-linux-docker
-        - secretRef:
-            name: azure-pat-token # TODO: Overiť či dokážem pristúpiť v start-k8s.sh v kontajneri na secret.
         volumeMounts:
         - name: agent-cache
           mountPath: /opt/Agents/cache
