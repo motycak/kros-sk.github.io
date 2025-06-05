@@ -39,11 +39,6 @@ spec:
           value: "$(POD_NAME)-build4"
         - name: KUBECONFIG
           value: "/opt/Agents/$(AZP_AGENT_NAME)/kubeconfig"
-        - name: AZURE_PAT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: azure-pat-token
-              key: AZURE_PAT_TOKEN
         - name: DEVEXTREME_KEY
           valueFrom:
             secretKeyRef:
@@ -54,6 +49,8 @@ spec:
             name: build-agent-config-common
         - configMapRef:
             name: build-agent-config-testing-linux-docker
+        - secretRef:
+            name: azure-pat-token
         volumeMounts:
         - name: agent-cache
           mountPath: /opt/Agents/cache
