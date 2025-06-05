@@ -63,7 +63,7 @@ spec:
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: testing-linux-docker-scaledObject
+  name: testing-linux-docker-scaled-object
 spec:
   scaleTargetRef:
     name: testing-linux-docker-statefulset
