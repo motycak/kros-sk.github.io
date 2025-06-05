@@ -31,8 +31,12 @@ spec:
       - name: testing-linux-docker-container
         image: azure-agent-linux:k8s
         env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         - name: AZP_AGENT_NAME
-          value: "$(metadata.name)-build4"
+          value: "$(POD_NAME)-build4"
         - name: KUBECONFIG
           value: "/opt/Agents/$(AZP_AGENT_NAME)/kubeconfig"
         - name: AZURE_PAT_TOKEN
