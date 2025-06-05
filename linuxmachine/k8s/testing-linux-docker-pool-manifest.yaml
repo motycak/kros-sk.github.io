@@ -44,13 +44,16 @@ spec:
             secretKeyRef:
               name: devextreme-key
               key: DEVEXTREME_KEY
+        - name: AZURE_PAT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: azure-pat-token
+              key: AZURE_PAT_TOKEN
         envFrom:
         - configMapRef:
             name: build-agent-config-common
         - configMapRef:
             name: build-agent-config-testing-linux-docker
-        - secretRef:
-            name: azure-pat-token
         volumeMounts:
         - name: agent-cache
           mountPath: /opt/Agents/cache
