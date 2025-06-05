@@ -78,7 +78,7 @@ metadata:
   name: testing-linux-docker-scaled-object
 spec:
   scaleTargetRef:
-    name: testing-linux-docker-statefulset
+    name: testing-linux-docker
     kind: StatefulSet
   pollingInterval: 30
   cooldownPeriod: 300
