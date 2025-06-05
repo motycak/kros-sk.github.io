@@ -221,6 +221,12 @@ kubectl apply --server-side -f https://github.com/kedacore/keda/releases/downloa
 docker build -t azure-agent-linux:k8s -f azure-agent-linux.dockerfile .
 ```
 
+Potrebné vybuildovať image v minikube:
+
+```bash
+minikube image build -t azure-agent-linux:k8s -f azure-agent-linux.dockerfile .
+```
+
 ## Vytvorenie namespace
 
 ```bash
