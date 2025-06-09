@@ -237,7 +237,25 @@ kubectl create namespace build-agents
 kubectl config set-context --current --namespace=build-agents # Nastavenie defaultneho namespace
 ```
 
+## Vytvorenie Helm chartu
+
+Vytváranie podov pre jednotlivé pooly je riešené cez nástroj [helm](https://helm.sh/). Pre nasadenie sa využíva spoločný template manifest pre všetky pooly, do ktorých sa dosadia hodnoty podľa toho pre aký pool sa vytvára.
+Hodnoty sa dosadzujú cez values súbory v adresári [charts/build-agents-chart/values](charts/build-agents-chart/values). Každý pool má svoj values súbor.
+
+```bash
+mkdir /opt/Agents/agentCharts
+cd /opt/Agents/agentCharts
+helm create build-agents-chart # vytvorenie defaultného chartu
+#Odstranenie nepotrebných súborov
+rm -rf build-agents-chart/templates
+rm -rf build-agents-chart/values.yaml
+# Prekopírovanie chartu z repozitára do adresára /opt/Agents/agentCharts/
+cp [cesta_k_priečinku_s_chartom] /opt/Agents/agentCharts/ # napr. cp ~/kros-sk.github.io/linuxmachine/charts/build-agents-chart/ /opt/Agents/agentCharts/
+```
+
 ## Vytvorenie podov s build agentmi
+
+### Priame využitie manifestov
 
 Aplikovanie všeobecného manifestu a potom poolové manifesty.
 
@@ -255,7 +273,62 @@ kubectl get configmap -n build-agents
 kubectl get scaledobject -n build-agents
 ```
 
+### Vytvorenie podov cez Helm chart
+
+Najprv si môžeme overiť vygenerovaný manifest.
+
+```bash
+# Overenie vygenerovaneho manifestu
+helm install [pomenovanie_release] /opt/Agents/agentCharts/build-agents-chart --values /opt/Agents/agentCharts/build-agents-chart/values/[nazov_values_suboru] --namespace build-agents --dry-run
+# napr.:
+helm install build-fe /opt/Agents/agentCharts/build-agents-chart --values /opt/Agents/agentCharts/build-agents-chart/values/values-build-fe.yaml --namespace build-agents --dry-run
+```
+
+Následne môžeme manifest aplikovať.
+
+```bash
+helm install [pomenovanie_release] /opt/Agents/agentCharts/build-agents-chart --values /opt/Agents/agentCharts/build-agents-chart/values/[nazov_values_suboru] --namespace build-agents
+# napr.:
+helm install build-fe /opt/Agents/agentCharts/build-agents-chart --values /opt/Agents/agentCharts/build-agents-chart/values/values-build-fe.yaml --namespace build-agents
+```
+
+Overenie, či sú pody spustené:
+
+```bash
+kubectl get pods -n build-agents
+kubectl get pvc -n build-agents
+kubectl get configmap -n build-agents
+kubectl get scaledobject -n build-agents
+helm ls -n build-agents # zobraziť všetky release cez Helm
+```
+
+Ak sa upravoval chart (buď values alebo samotný template), tak môžeme updatovať release.
+
+```bash
+helm upgrade [pomenovanie_release] /opt/Agents/agentCharts/build-agents-chart --values /opt/Agents/agentCharts/build-agents-chart/values/[nazov_values_suboru] --namespace build-agents
+# napr.:
+helm upgrade build-fe /opt/Agents/agentCharts/build-agents-chart --values /opt/Agents/agentCharts/build-agents-chart/values/values-build-fe.yaml --namespace build-agents
+```
+
+Ak sa po úpravach niečo pokazilo a chceme sa vrátiť k pôvodnému stavu, tak môžeme použiť rollback.
+
+```bash
+helm rollback [pomenovanie_release] [číslo_revision] -n build-agents
+# napr.:
+helm rollback build-fe 1 -n build-agents
+```
+
+Ak potrebujem overiť ako vyzerali manifesty pre release v konkrétnej revision, tak môžem použiť:
+
+```bash
+helm get all [pomenovanie_release] --revision [číslo_revision] -n build-agents
+# napr.:
+helm get all build-fe --revision 1 -n build-agents
+```
+
 ## Odstránenie
+
+### Odstránenie priamo cez manifesty
 
 Odstránenie konkrétneho poolu:
 
@@ -267,6 +340,14 @@ Odstránenie spoločného manifestu:
 
 ```bash
 kubectl delete -f k8s/common-pool-manifest.yaml -n build-agents
+```
+
+### Odstránenie cez Helm chart
+
+```bash
+helm uninstall [pomenovanie_release] -n build-agents
+# napr.:
+helm uninstall build-fe -n build-agents
 ```
 
 ## Odinštalovanie KEDA
