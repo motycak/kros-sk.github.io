@@ -1,0 +1,13 @@
+pool:
+  name: "Deploy BE"
+  agentNameBase: "deploy-be"
+  replicas: 3
+  scaler:
+    minReplicas: 3
+    maxReplicas: 6
+    pollingInterval: 30
+    cooldownPeriod: 300
+    targetPipelinesQueueLength: "1"
+  image:
+    name: azure-agent-linux
+    tag: k8s

@@ -1,0 +1,13 @@
+pool:
+  name: "Build BE"
+  agentNameBase: "build-be"
+  replicas: 2
+  scaler:
+    minReplicas: 2
+    maxReplicas: 4
+    pollingInterval: 30
+    cooldownPeriod: 300
+    targetPipelinesQueueLength: "1"
+  image:
+    name: azure-agent-linux
+    tag: k8s

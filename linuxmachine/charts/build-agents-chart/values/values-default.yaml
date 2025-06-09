@@ -1,0 +1,13 @@
+pool:
+  name: "Default"
+  agentNameBase: "default"
+  replicas: 4
+  scaler:
+    minReplicas: 4
+    maxReplicas: 6
+    pollingInterval: 30
+    cooldownPeriod: 300
+    targetPipelinesQueueLength: "1"
+  image:
+    name: azure-agent-linux
+    tag: k8s

@@ -1,0 +1,13 @@
+pool:
+  name: "Deploy FE"
+  agentNameBase: "deploy-fe"
+  replicas: 1
+  scaler:
+    minReplicas: 1
+    maxReplicas: 2
+    pollingInterval: 30
+    cooldownPeriod: 300
+    targetPipelinesQueueLength: "1"
+  image:
+    name: azure-agent-linux
+    tag: k8s

@@ -1,0 +1,13 @@
+pool:
+  name: "Build FE"
+  agentNameBase: "build-fe"
+  replicas: 2
+  scaler:
+    minReplicas: 2
+    maxReplicas: 3
+    pollingInterval: 30
+    cooldownPeriod: 300
+    targetPipelinesQueueLength: "1"
+  image:
+    name: azure-agent-linux
+    tag: k8s
