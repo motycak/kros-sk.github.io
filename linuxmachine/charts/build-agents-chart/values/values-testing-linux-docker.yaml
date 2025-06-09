@@ -4,7 +4,7 @@ pool:
   replicas: 2
   scaler:
     minReplicas: 2
-    maxReplicas: 4
+    maxReplicas: 3
     pollingInterval: 30
     cooldownPeriod: 300
     targetPipelinesQueueLength: "1"
