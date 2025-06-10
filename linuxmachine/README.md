@@ -199,7 +199,8 @@ minikube delete --all
 ### Alternatíva K3s
 
 ```bash
-curl -sfL https://get.k3s.io | sh
+curl -sfL https://get.k3s.io | sh -
+sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config # prekopírovanie KUBECONFIG
 ```
 
 Po nainštalovaní bude K3s služba nakonfigurovaná aby sa automaticky reštartovala po reboote nodu alebo v prípade zlyhania či ukončenia procesu.
@@ -224,10 +225,41 @@ kubectl apply --server-side -f https://github.com/kedacore/keda/releases/downloa
 docker build -t azure-agent-linux:k8s -f azure-agent-linux.dockerfile .
 ```
 
-Potrebné vybuildovať image v minikube:
+## Nahratie image do Azure Container Registry
+
+Docker image sa nahrá do nášho privátneho registry. [krossk](https://portal.azure.com/#@kros.sk/resource/subscriptions/0f009b83-9652-4e0f-b891-2e6d816ecb88/resourcegroups/esw-shared-rsg/providers/microsoft.containerregistry/registries/krossk/overview)
+
+### Prihlásenie do Azure Container Registry
 
 ```bash
-minikube image build -t azure-agent-linux:k8s -f azure-agent-linux.dockerfile .
+az login
+az acr login --name krossk
+```
+
+### Tagovanie a push image do ACR
+
+```bash
+docker tag azure-agent-linux:k8s krossk.azurecr.io/azure-agent-linux:k8s
+docker push krossk.azurecr.io/azure-agent-linux:k8s
+```
+
+### Vytvorenie secretu pre prístup k ACR
+
+```bash
+# Vytvorenie service principal s prístupom k ACR
+az ad sp create-for-rbac \
+  --name "[build-machine-name]-acr-sp" \
+  --role "AcrPull" \
+  --scopes "/subscriptions/0f009b83-9652-4e0f-b891-2e6d816ecb88/resourceGroups/esw-shared-rsg/providers/Microsoft.ContainerRegistry/registries/krossk"
+
+# Výstup bude obsahovať appId (username) a password
+# Použite tieto hodnoty pri vytváraní secretu
+
+kubectl create secret docker-registry acr-secret \
+  --docker-server=krossk.azurecr.io \
+  --docker-username=<service-principal-id> \
+  --docker-password=<service-principal-password> \
+  --namespace=build-agents
 ```
 
 ## Vytvorenie namespace

@@ -9,5 +9,5 @@ pool:
     cooldownPeriod: 300
     targetPipelinesQueueLength: "1"
   image:
-    name: azure-agent-linux
+    repository: krossk.azurecr.io/azure-agent-linux
     tag: k8s

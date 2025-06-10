@@ -51,9 +51,12 @@ spec:
         app: build-agent-{{ .Values.pool.agentNameBase }}
         pool: {{ .Values.pool.agentNameBase }}
     spec:
+      imagePullSecrets:
+      - name: acr-secret
       containers:
       - name: "{{ .Values.pool.agentNameBase }}-container"
-        image: "{{ .Values.pool.image.name }}:{{ .Values.pool.image.tag }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: "Always"
         env:
         - name: POD_NAME
           valueFrom:
