@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-# Načítanie tokenu zo secretu
-# export AZP_TOKEN=$(cat /run/secrets/azure_pat_token)
-
 if [ -z "$AZP_URL" ] || [ -z "$AZURE_PAT_TOKEN" ] || [ -z "$AZP_AGENT_NAME" ] || [ -z "$AZP_POOL" ]; then
   echo 1>&2 "You must set AZP_URL, AZURE_PAT_TOKEN (secret) and AZP_AGENT_NAME and AZP_POOL!"
   exit 1
