@@ -25,7 +25,7 @@ Na mašine sa využívajú Helm charts pre centralizovanú správu konfigurácie
 
 ```mermaid
 flowchart TD
-    A[Azure DevOps Pipeline] --> B{Úlohy čakajú?}
+    A[Azure DevOps Pipeline] --> B{Joby v poole čakajú?}
     B -->|Áno| C[KEDA Scaler]
     B -->|Nie| D[Žiadne akcie]
     
@@ -51,6 +51,7 @@ flowchart TD
     subgraph "Azure DevOps"
         A
         B
+        D
         H
         L
     end
