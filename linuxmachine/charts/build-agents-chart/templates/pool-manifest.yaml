@@ -8,7 +8,7 @@ spec:
   resources:
     requests:
       storage: 100Gi
-  storageClassName: standard 
+  storageClassName: local-path 
 ---
 apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
