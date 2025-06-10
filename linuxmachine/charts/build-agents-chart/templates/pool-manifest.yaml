@@ -55,7 +55,7 @@ spec:
       - name: acr-secret
       containers:
       - name: "{{ .Values.pool.agentNameBase }}-container"
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: "{{ .Values.pool.image.repository }}:{{ .Values.pool.image.tag }}"
         imagePullPolicy: "Always"
         env:
         - name: POD_NAME
