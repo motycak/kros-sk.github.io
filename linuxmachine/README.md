@@ -60,14 +60,6 @@ V repozitári sú uložené manifesty pre Build Agentov. Tie budú potrebné pre
 git clone -b master https://github.com/Kros-sk/kros-sk.github.io.git
 ```
 
-## Spustenie kontajnerov
-
-Na spustenie kontajnerov vieme použiť 2 prístupy:
-
-### Orchestrácia kontajnerov TODO (kubernetes/docker swarm)
-
-Máme nad správaním kontajnerov väčšiu kontrolu a viac možností. TODO pokračovať.
-
 ## Inštalácia Kubernetes
 
 Na manažovanie kontajnerov využívame Kubernetes.
@@ -128,7 +120,7 @@ Zmazanie clusteru (odinštalovanie):
 
 ```bash
 kubectl create namespace build-agents
-kubectl config set-context --current --namespace=build-agents # Nastavenie defaultneho namespace
+kubectl config set-context --current --namespace=build-agents
 ```
 
 ## Nainštalovanie KEDA
