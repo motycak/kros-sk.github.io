@@ -4,7 +4,7 @@ metadata:
   name: agent-cache-pvc
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce # k3s nepodporuje ReadWriteMany. ReadWriteOnce je dostatočné pre naše účely pretože obmedzuje len prístup z jedného node. Viaceré pody môžu stále pristupovať.
   resources:
     requests:
       storage: 100Gi
