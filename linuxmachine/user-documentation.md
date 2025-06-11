@@ -2,24 +2,37 @@
 
 ## Prehľad systému
 
-Build agenti sú rozbehaní v kubernetes clusteri. Každý agent je samostatný pod. Systém umožňuje dynamické škálovanie počtu dostupných agentov vrámci poolu v závislosti od aktuálne čakajúcich úloh jobov v queue.
+Build agenti sú rozbehaní v kubernetes clusteri s jedným node-om. Každý pool je reprezentovaný ako StatefulSet, ktorý obsahuje určený minimálny a maximálny počet replikácií. Každá replikácia je jeden pod s Linuxovým Docker kontajnerom, v ktorom beží jeden Azure DevOps agent. Systém využíva KEDA (Kubernetes Event-driven Autoscaling) na automatické škálovanie počtu agentov v závislosti od počtu čakajúcich úloh v Azure DevOps pooloch.
 
 ## Princípy fungovania
 
-### 1. Automatické škálovanie
+### 1. Automatické škálovanie cez KEDA
 
-Systém využíva KEDA (Kubernetes Event-driven Autoscaling) na automatické škálovanie počtu build agentov. Keď sa v Azure DevOps nahromadia čakajúce úlohy, systém automaticky vytvorí nového agenta. Po dokončení úloh sa neaktívni agenti automaticky odstránia. Vždy je ale určený minimálny počet agentov, ktorí sú aktívni stále.
+Systém využíva KEDA scaler na automatické škálovanie počtu build agentov. Proces funguje nasledovne:
 
-### 2. Kontajnerizácia
+- **Monitorovanie**: KEDA kontinuálne monitoruje Azure DevOps pool a počet čakajúcich úloh
+- **Škálovanie nahor**: Ak sú v poole čakajúce úlohy, KEDA vytvorí nový pod (replikáciu) v StatefulSet
+- **Škálovanie nadol**: Po určitom cooldown období a ak nie sú čakajúce úlohy, KEDA znižuje počet podov
+- **Limity**: Škálovanie je obmedzené na minimálny a maximálny počet replikácií definovaný pre každý pool
+
+### 2. StatefulSet architektúra
+
+Každý pool je implementovaný ako StatefulSet s nasledujúcimi vlastnosťami:
+
+- **Stabilné identity**: Každý pod má stabilné meno (napr. `build-be-1`, `build-be-2`) a negeneruje náhodné čísla pre pody. číslovanie je od 1
+- **Persistentné úložisko**: Cez PersistentVolumeClaim je vytvorené zdieľané úložisko medzi agentmi. Využíva sa na cache. Ak sa aj pody rušia, tak cache sa nezmaže.
+
+### 3. Kontajnerizácia
 
 Všetci agenti bežia v Docker kontajneroch, čo zabezpečuje:
 
 - Konzistentné prostredie pre všetkých agentov
 - Izolácia od ostatných agentov
+- Jednoduchá aktualizácia a správa
 
-### 3. Centralizovaná správa
+### 4. Centralizovaná správa
 
-Na mašine sa využívajú Helm charts pre centralizovanú správu konfigurácie a nasadenia.
+Na mašine sa využívajú Helm charts pre centralizovanú správu konfigurácie a nasadenia poolov do kubernetesu.
 
 ## Architektúra systému
 
@@ -29,35 +42,65 @@ flowchart TD
     B -->|Áno| C[KEDA Scaler]
     B -->|Nie| D[Žiadne akcie]
     
-    C --> E[Kubernetes API]
-    E --> F[Vytvorenie nového Pod]
-    F --> G[Docker Container]
-    G --> H[Azure Agent]
-    H --> I[Spracovanie úlohy]
+    C --> E{KEDA kontroluje StatefulSet}
+    E --> F{Počet replikácií < max?}
+    F -->|Áno| G[Zvýšenie počtu replikácií]
+    F -->|Nie| H[Dosiahnutý max limit]
     
-    I --> J{Úloha dokončená?}
-    J -->|Áno| K[Odstránenie Pod]
-    J -->|Nie| I
+    G --> I[Kubernetes API]
+    I --> J[Vytvorenie nového Pod v StatefulSet]
+    J --> K[Docker Container]
+    K --> L[Azure Agent]
+    L --> M[Spracovanie úlohy]
     
-    K --> L[Agent sa odpojí z poolu]
+    M --> N{Úloha dokončená?}
+    N -->|Nie| M
+    N -->|Áno| O{Cooldown obdobie uplynulo?}
     
-    subgraph "Kubernetes Cluster"
+    O -->|Nie| P[Čakanie na cooldown]
+    P --> O
+    O -->|Áno| Q{Žiadne čakajúce úlohy?}
+    Q -->|Áno| R{Počet replikácií > min?}
+    R -->|Áno| S[Zníženie počtu replikácií]
+    R -->|Nie| T[Zachovanie minimálneho počtu]
+    Q -->|Nie| U[Zachovanie aktuálneho počtu]
+    
+    S --> V[Odstránenie Pod]
+    V --> W[Agent sa odpojí z poolu]
+    
+    subgraph "Kubernetes Cluster (Single Node)"
         E
         F
         G
+        H
+        I
+        J
         K
+        O
+        P
+        Q
+        R
+        S
+        T
+        U
+        V
     end
     
     subgraph "Azure DevOps"
         A
         B
         D
-        H
         L
+        W
     end
     
     subgraph "KEDA"
         C
+    end
+    
+    subgraph "StatefulSet Pool"
+        J
+        V
     end
 ```
 
@@ -68,18 +111,24 @@ flowchart TD
 - Spravuje build pipeline a úlohy
 - Poskytuje pool agentov pre spracovanie úloh
 - Komunikuje s agentmi cez Azure DevOps API
+- Poskytuje informácie o čakajúcich úlohách pre KEDA
 
-### Kubernetes (K3s)
+### Kubernetes (K3s) - Single Node Cluster
 
 - Orchestruje Docker kontajnery
 - Poskytuje API pre automatické škálovanie
-- Zabezpečuje vysokú dostupnosť a odolnosť
+- Spravuje StatefulSets a ich replikácie
 
-### KEDA
+### KEDA (Kubernetes Event-driven Autoscaling)
 
-- Monitoruje Azure DevOps pool
-- Automaticky škáluje počet agentov
-- Optimalizuje náklady a výkon
+- Monitoruje Azure DevOps pool a počet čakajúcich úloh
+- Automaticky škáluje StatefulSets podľa definovaných pravidiel
+- Rešpektuje minimálne a maximálne limity replikácií
+
+### StatefulSet
+
+- Poskytuje stabilné identity pre pody
+- Zabezpečuje ordinálne číslovanie (build-be-1, build-be-2, ...)
 
 ### Docker
 
@@ -87,47 +136,26 @@ flowchart TD
 - Zabezpečuje konzistentnosť prostredia
 - Umožňuje rýchle nasadenie a aktualizácie
 
-## Výhody systému
+## Proces škálovania
 
-1. **Automatické škálovanie**: Systém automaticky prispôsobuje počet agentov aktuálnej záťaži
-2. **Nákladová efektívnosť**: Agenti sa vytvárajú len keď sú potrební
-3. **Vysoká dostupnosť**: Kubernetes zabezpečuje automatické reštartovanie v prípade zlyhania
-4. **Jednoduchá správa**: Centralizovaná konfigurácia cez Helm charts
-5. **Flexibilita**: Možnosť rýchlo pridať nové typy poolov alebo upraviť konfiguráciu
+### Škálovanie nahor (Scale Up)
 
-## Typické scenáre použitia
+1. **Monitorovanie**: KEDA každých 30 sekúnd (dá sa prispôsobiť) kontroluje počet čakajúcich úloh v Azure DevOps pool
+2. **Vyhodnotenie**: Ak sú čakajúce úlohy a aktuálny počet replikácií je menší ako maximum
+3. **Spustenie**: Kubernetes vytvorí nový pod (replikáciu) s Docker kontajnerom
 
-### Denná prevádzka
+### Škálovanie nadol (Scale Down)
 
-- Vývojári pushujú kód do Azure DevOps
-- Systém automaticky vytvorí potrebný počet agentov
-- Buildy sa spracovávajú paralelne
-- Po dokončení sa neaktívne agenty odstránia
+1. **Cooldown**: Po triggernutí scale up eventu sa čaká 300 sekúnd (dá sa prispôsobiť) kým začne kontrola pre škálovanie nadol
+2. **Vyhodnotenie**: Ak nie sú čakajúce úlohy a počet replikácií je väčší ako minimum
+3. **Odstránenie**: KEDA zníži počet replikácií StatefulSet, t.j. odstráni pod
 
-### Špičkové zaťaženie
+### Konfigurácia škálovania
 
-- Pri veľkom množstve commitov sa automaticky vytvorí viac agentov
-- Systém optimalizuje využitie dostupných zdrojov
-- Buildy sa spracovávajú bez čakania
+Pre každý pool sú definované nasledujúce parametre:
 
-### Údržba a aktualizácie
-
-- Aktualizácie sa aplikujú cez Helm upgrade
-- Možnosť rollback v prípade problémov
-- Minimálne prerušenie služby
-
-## Monitoring a kontrola
-
-Systém poskytuje niekoľko spôsobov monitorovania:
-
-- **Kubernetes CLI**: Základné informácie o podoch a službách
-- **K9s**: Grafické rozhranie pre správu Kubernetes
-- **Azure DevOps**: Prehľad stavu poolov a agentov
-- **Helm**: Správa release a konfigurácií
-
-## Bezpečnosť
-
-- Agenti bežia v izolovaných kontajneroch
-- Prístup k Azure DevOps cez PAT tokeny
-- Privátne Docker registry pre build images
-- Kubernetes RBAC pre správu prístupov
+- **minReplicas**: Minimálny počet replikácií (vždy aktívnych agentov)
+- **maxReplicas**: Maximálny počet replikácií
+- **pollingInterval**: Interval kontroly čakajúcich úloh (30s)
+- **cooldownPeriod**: Obdobie čakania pred znížením (300s)
+- **targetPipelinesQueueLength**: Cieľový počet čakajúcich úloh pre škálovanie (1)
