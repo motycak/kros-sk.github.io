@@ -34,6 +34,74 @@ Všetci agenti bežia v Docker kontajneroch, čo zabezpečuje:
 
 Na mašine sa využívajú Helm charts pre centralizovanú správu konfigurácie a nasadenia poolov do kubernetesu.
 
+## Architektúra systému
+
+```mermaid
+graph TB
+    subgraph "Azure DevOps"
+        ADO[Azure DevOps<br/>Pipeline & Jobs]
+        ADO_POOL[Agent Pool<br/>Čakajúce úlohy]
+    end
+    
+    subgraph "Kubernetes Cluster (K3s - Single Node)"
+        subgraph "KEDA"
+            KEDA_SCALER[KEDA Scaler<br/>Monitoruje ADO Pool]
+        end
+        
+        subgraph "StatefulSet - Build Pool"
+            subgraph "Pod 1"
+                AGENT1[Azure DevOps Agent<br/>Docker Container]
+            end
+            subgraph "Pod 2"
+                AGENT2[Azure DevOps Agent<br/>Docker Container]
+            end
+            subgraph "Pod N"
+                AGENTN[Azure DevOps Agent<br/>Docker Container]
+            end
+        end
+        
+        subgraph "Persistent Storage"
+            PVC[PersistentVolumeClaim<br/>Cache Storage]
+        end
+        
+        subgraph "Kubernetes API"
+            K8S_API[Kubernetes API<br/>StatefulSet Management]
+        end
+    end
+    
+    subgraph "Helm Charts"
+        HELM[Helm Charts<br/>Konfigurácia & Deployment]
+    end
+    
+    %% Connections
+    ADO --> ADO_POOL
+    ADO_POOL --> KEDA_SCALER
+    KEDA_SCALER --> K8S_API
+    K8S_API --> StatefulSet
+    HELM --> K8S_API
+    
+    AGENT1 --> PVC
+    AGENT2 --> PVC
+    AGENTN --> PVC
+    
+    AGENT1 --> ADO
+    AGENT2 --> ADO
+    AGENTN --> ADO
+    
+    %% Styling
+    classDef azure fill:#0078d4,stroke:#005a9e,stroke-width:2px,color:#fff
+    classDef keda fill:#ff6b35,stroke:#d84315,stroke-width:2px,color:#fff
+    classDef k8s fill:#326ce5,stroke:#1e3a8a,stroke-width:2px,color:#fff
+    classDef helm fill:#0f1689,stroke:#0f1689,stroke-width:2px,color:#fff
+    classDef storage fill:#ffd700,stroke:#ff8c00,stroke-width:2px,color:#000
+    
+    class ADO,ADO_POOL azure
+    class KEDA_SCALER keda
+    class AGENT1,AGENT2,AGENTN,K8S_API k8s
+    class HELM helm
+    class PVC storage
+```
+
 ## Proces škálovania
 
 ```mermaid
