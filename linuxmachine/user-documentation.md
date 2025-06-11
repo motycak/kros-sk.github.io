@@ -95,10 +95,10 @@ graph TB
     AGENTN_N --> PVC
     
     %% Styling
-    classDef keda fill:#ffb74d,stroke:#f57c00,stroke-width:2px,color:#000,font-size:20px
-    classDef k8s fill:#81c784,stroke:#388e3c,stroke-width:2px,color:#000,font-size:20px
-    classDef helm fill:#64b5f6,stroke:#1976d2,stroke-width:2px,color:#000,font-size:20px
-    classDef storage fill:#f8bbd9,stroke:#c2185b,stroke-width:2px,color:#000,font-size:20px
+    classDef keda fill:#ffb74d,stroke:#f57c00,stroke-width:2px,color:#000,font-size:30px
+    classDef k8s fill:#81c784,stroke:#388e3c,stroke-width:2px,color:#000,font-size:30px
+    classDef helm fill:#64b5f6,stroke:#1976d2,stroke-width:2px,color:#000,font-size:30px
+    classDef storage fill:#f8bbd9,stroke:#c2185b,stroke-width:2px,color:#000,font-size:30px
     
     class KEDA_SCALER1,KEDA_SCALERN keda
     class AGENT1_1,AGENT1_2,AGENT1_N,AGENTN_1,AGENTN_2,AGENTN_N k8s
