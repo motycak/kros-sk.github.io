@@ -47,7 +47,7 @@ graph TB
             KEDA_SCALERN[KEDA Scaler<br/>Pool N]
         end
         
-        subgraph STATEFULSET_POOL1["StatefulSet - Pool 1"]
+        subgraph STATEFULSET_POOL1["StatefulSet - Agent Pool 1"]
             subgraph "Pod 1-1"
                 AGENT1_1[Azure DevOps Agent<br/>Docker kontajner]
             end
@@ -59,7 +59,7 @@ graph TB
             end
         end
         
-        subgraph STATEFULSET_POOLN["StatefulSet - Pool N"]
+        subgraph STATEFULSET_POOLN["StatefulSet - Agent Pool N"]
             subgraph "Pod N-1"
                 AGENTN_1[Azure DevOps Agent<br/>Docker kontajner]
             end
