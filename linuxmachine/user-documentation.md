@@ -77,8 +77,7 @@ graph TB
         end
         
         subgraph "Persistent Storage"
-            PVC1[PersistentVolumeClaim<br/>Cache úložisko Pool 1]
-            PVCN[PersistentVolumeClaim<br/>Cache úložisko Pool N]
+            PVC[PersistentVolumeClaim<br/>Cache úložisko]
         end
     end
     
@@ -97,13 +96,12 @@ graph TB
     HELM --> StatefulSet
     HELM --> StatefulSet
     
-    AGENT1_1 --> PVC1
-    AGENT1_2 --> PVC1
-    AGENT1_N --> PVC1
-    
-    AGENTN_1 --> PVCN
-    AGENTN_2 --> PVCN
-    AGENTN_N --> PVCN
+    AGENT1_1 --> PVC
+    AGENT1_2 --> PVC
+    AGENT1_N --> PVC
+    AGENTN_1 --> PVC
+    AGENTN_2 --> PVC
+    AGENTN_N --> PVC
     
     AGENT1_1 --> ADO
     AGENT1_2 --> ADO
@@ -123,7 +121,7 @@ graph TB
     class KEDA_SCALER1,KEDA_SCALERN keda
     class AGENT1_1,AGENT1_2,AGENT1_N,AGENTN_1,AGENTN_2,AGENTN_N k8s
     class HELM helm
-    class PVC1,PVCN storage
+    class PVC storage
 ```
 
 ## Proces škálovania
