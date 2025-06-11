@@ -65,7 +65,7 @@ graph TB
         end
         
         subgraph "Kubernetes API"
-            K8S_API[Kubernetes API<br/>StatefulSet Management]
+            K8S_API[StatefulSet Management]
         end
     end
     
