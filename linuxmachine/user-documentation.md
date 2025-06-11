@@ -63,12 +63,12 @@ flowchart TD
     
     U --> X[Odstránenie Pod]
     
-    subgraph "Kubernetes Cluster"
+    subgraph "KEDA"
+        C
         F
         G
         H
         I
-        J
         K
         P
         Q
@@ -78,7 +78,6 @@ flowchart TD
         U
         V
         W
-        X
     end
     
     subgraph "Azure DevOps"
@@ -86,12 +85,6 @@ flowchart TD
         B
         D
         L
-        Y
-    end
-    
-    subgraph "KEDA"
-        C
-        P
     end
     
     subgraph "StatefulSet Pool"
