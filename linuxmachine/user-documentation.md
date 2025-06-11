@@ -52,7 +52,7 @@ graph TB
             KEDA_SCALERN[KEDA Scaler<br/>Pool N]
         end
         
-        subgraph "Pool 1 - Agenti"
+        subgraph "StatefulSet - Pool 1"
             subgraph "Pod 1-1"
                 AGENT1_1[Azure DevOps Agent<br/>Docker kontajner]
             end
@@ -64,7 +64,7 @@ graph TB
             end
         end
         
-        subgraph "Pool N - Agenti"
+        subgraph "StatefulSet - Pool N"
             subgraph "Pod N-1"
                 AGENTN_1[Azure DevOps Agent<br/>Docker kontajner]
             end
@@ -90,19 +90,11 @@ graph TB
     ADO_POOL --> KEDA_SCALER1
     ADO_POOL --> KEDA_SCALERN
     
-    KEDA_SCALER1 --> AGENT1_1
-    KEDA_SCALER1 --> AGENT1_2
-    KEDA_SCALER1 --> AGENT1_N
-    KEDA_SCALERN --> AGENTN_1
-    KEDA_SCALERN --> AGENTN_2
-    KEDA_SCALERN --> AGENTN_N
+    KEDA_SCALER1 --> StatefulSet
+    KEDA_SCALERN --> StatefulSet
     
-    HELM --> AGENT1_1
-    HELM --> AGENT1_2
-    HELM --> AGENT1_N
-    HELM --> AGENTN_1
-    HELM --> AGENTN_2
-    HELM --> AGENTN_N
+    HELM --> StatefulSet
+    HELM --> StatefulSet
     
     AGENT1_1 --> PVC
     AGENT1_2 --> PVC
@@ -132,7 +124,7 @@ graph TB
     class PVC storage
 ```
 
-## Proces škálovania diagram
+## Proces škálovania
 
 ```mermaid
 flowchart TD
