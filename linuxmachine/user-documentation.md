@@ -34,7 +34,7 @@ Všetci agenti bežia v Docker kontajneroch, čo zabezpečuje:
 
 Na mašine sa využívajú Helm charts pre centralizovanú správu konfigurácie a nasadenia poolov do kubernetesu.
 
-## Architektúra systému
+## Architektúra poolu
 
 ```mermaid
 flowchart TD
@@ -42,8 +42,7 @@ flowchart TD
     B -->|Áno| C[KEDA Scaler]
     B -->|Nie| D[Žiadne akcie]
     
-    C --> E{KEDA kontroluje StatefulSet}
-    E --> F{Počet replikácií < max?}
+    C --> F{Počet replikácií < max?}
     F -->|Áno| G[Zvýšenie počtu replikácií]
     F -->|Nie| H[Dosiahnutý max limit]
     
@@ -68,8 +67,7 @@ flowchart TD
     S --> V[Odstránenie Pod]
     V --> W[Agent sa odpojí z poolu]
     
-    subgraph "Kubernetes Cluster (Single Node)"
-        E
+    subgraph "Kubernetes Cluster"
         F
         G
         H
