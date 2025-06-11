@@ -36,70 +36,111 @@ Na mašine sa využívajú Helm charts pre centralizovanú správu konfigurácie
 
 ## Architektúra systému
 
-```mermaid
-graph TB
-    subgraph "Azure DevOps"
-        ADO[Azure DevOps<br/>Pipeline & Jobs]
-        ADO_POOL[Agent Pool<br/>Čakajúce úlohy]
-    end
+```plantuml
+@startuml
+!define AZURE_COLOR #0078d4
+!define KEDA_COLOR #ff6b35
+!define K8S_COLOR #326ce5
+!define HELM_COLOR #0f1689
+!define STORAGE_COLOR #ffd700
+
+skinparam component {
+    BackgroundColor<<Azure>> AZURE_COLOR
+    BackgroundColor<<KEDA>> KEDA_COLOR
+    BackgroundColor<<K8S>> K8S_COLOR
+    BackgroundColor<<Helm>> HELM_COLOR
+    BackgroundColor<<Storage>> STORAGE_COLOR
+    FontColor<<Azure>> white
+    FontColor<<KEDA>> white
+    FontColor<<K8S>> white
+    FontColor<<Helm>> white
+    FontColor<<Storage>> black
+}
+
+package "Azure DevOps" <<Azure>> {
+    [Azure DevOps Pipeline & Jobs] as ADO
+    [Agent Pool\nČakajúce úlohy] as ADO_POOL
+}
+
+package "K3s - Single Node Cluster" {
+    package "KEDA (Kubernetes Event-driven Autoscaling)" <<KEDA>> {
+        [KEDA Scaler\nMonitoruje ADO Pool] as KEDA_SCALER
+    }
     
-    subgraph "K3s - Single Node cluster"
-        subgraph "KEDA"
-            KEDA_SCALER[KEDA Scaler<br/>Monitoruje ADO Pool]
-        end
-        
-        subgraph "StatefulSet - Build Pool"
-            subgraph "Pod 1"
-                AGENT1[Azure DevOps Agent<br/>Docker Container]
-            end
-            subgraph "Pod 2"
-                AGENT2[Azure DevOps Agent<br/>Docker Container]
-            end
-            subgraph "Pod N"
-                AGENTN[Azure DevOps Agent<br/>Docker Container]
-            end
-        end
-        
-        subgraph "Persistent Storage"
-            PVC[PersistentVolumeClaim<br/>Cache Storage]
-        end
-        
-        subgraph "Kubernetes API"
-            K8S_API[Kubernetes API<br/>StatefulSet Management]
-        end
-    end
+    package "Kubernetes API" <<K8S>> {
+        [StatefulSet Controller] as K8S_API
+    }
     
-    subgraph "Helm Charts"
-        HELM[Helm Charts<br/>Konfigurácia & Deployment]
-    end
+    package "StatefulSet - Build Pool" <<K8S>> {
+        package "Pod 1" {
+            [Azure DevOps Agent\nDocker Container] as AGENT1
+        }
+        package "Pod 2" {
+            [Azure DevOps Agent\nDocker Container] as AGENT2
+        }
+        package "Pod N" {
+            [Azure DevOps Agent\nDocker Container] as AGENTN
+        }
+    }
     
-    %% Connections
-    ADO --> ADO_POOL
-    ADO_POOL --> KEDA_SCALER
-    KEDA_SCALER --> K8S_API
-    K8S_API --> StatefulSet
-    HELM --> K8S_API
+    package "Persistent Storage" <<Storage>> {
+        [PersistentVolumeClaim\nagent-cache-pvc\n100Gi Local Storage] as PVC
+    }
     
-    AGENT1 --> PVC
-    AGENT2 --> PVC
-    AGENTN --> PVC
-    
-    AGENT1 --> ADO
-    AGENT2 --> ADO
-    AGENTN --> ADO
-    
-    %% Styling
-    classDef azure fill:#0078d4,stroke:#005a9e,stroke-width:2px,color:#fff
-    classDef keda fill:#ff6b35,stroke:#d84315,stroke-width:2px,color:#fff
-    classDef k8s fill:#326ce5,stroke:#1e3a8a,stroke-width:2px,color:#fff
-    classDef helm fill:#0f1689,stroke:#0f1689,stroke-width:2px,color:#fff
-    classDef storage fill:#ffd700,stroke:#ff8c00,stroke-width:2px,color:#000
-    
-    class ADO,ADO_POOL azure
-    class KEDA_SCALER keda
-    class AGENT1,AGENT2,AGENTN,K8S_API k8s
-    class HELM helm
-    class PVC storage
+    package "Kubernetes Resources" <<K8S>> {
+        [ConfigMap\nbuild-agent-config] as CONFIG
+        [Secret\nazure-pat-token] as SECRET
+        [Service\nHeadless Service] as SERVICE
+    }
+}
+
+package "Helm Charts" <<Helm>> {
+    [Helm Chart\nbuild-agents-chart] as HELM
+}
+
+' Connections
+ADO --> ADO_POOL
+ADO_POOL --> KEDA_SCALER : monitoruje čakajúce úlohy
+KEDA_SCALER --> K8S_API : škáluje StatefulSet
+HELM --> K8S_API : nasadí konfiguráciu
+
+K8S_API --> AGENT1 : vytvára/ruší pod
+K8S_API --> AGENT2 : vytvára/ruší pod
+K8S_API --> AGENTN : vytvára/ruší pod
+
+AGENT1 --> PVC : mountuje cache
+AGENT2 --> PVC : mountuje cache
+AGENTN --> PVC : mountuje cache
+
+AGENT1 --> CONFIG : číta konfiguráciu
+AGENT2 --> CONFIG : číta konfiguráciu
+AGENTN --> CONFIG : číta konfiguráciu
+
+AGENT1 --> SECRET : číta PAT token
+AGENT2 --> SECRET : číta PAT token
+AGENTN --> SECRET : číta PAT token
+
+AGENT1 --> ADO : spracováva úlohy
+AGENT2 --> ADO : spracováva úlohy
+AGENTN --> ADO : spracováva úlohy
+
+SERVICE --> AGENT1 : service discovery
+SERVICE --> AGENT2 : service discovery
+SERVICE --> AGENTN : service discovery
+
+note right of PVC
+  ReadWriteOnce access mode
+  Viaceré pody môžu pristupovať
+  k rovnakému úložisku na jednom node
+end note
+
+note right of KEDA_SCALER
+  Polling Interval: 30s
+  Cooldown Period: 300s
+  Min/Max Replicas: konfigurovateľné
+end note
+
+@enduml
 ```
 
 ## Proces škálovania
