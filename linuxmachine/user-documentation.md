@@ -39,8 +39,8 @@ Na mašine sa využívajú Helm charts pre centralizovanú správu konfigurácie
 ```mermaid
 flowchart TD
     A[Azure DevOps Pipeline] --> B{Joby v poole čakajú?}
-    B -->|Áno| C[KEDA Scaler]
-    B -->|Nie| D[Žiadne akcie]
+    B -->|Áno| C[KEDA Scaler - Scale Up]
+    B -->|Nie| D[Žiadne akcie pre Scale Up]
     
     C --> F{Počet replikácií < max?}
     F -->|Áno| G[Zvýšenie počtu replikácií]
@@ -54,18 +54,20 @@ flowchart TD
     
     M --> N{Úloha dokončená?}
     N -->|Nie| M
-    N -->|Áno| O{Cooldown obdobie uplynulo?}
+    N -->|Áno| O[Agent pokračuje v čakaní na ďalšie úlohy]
     
-    O -->|Nie| P[Čakanie na cooldown]
-    P --> O
-    O -->|Áno| Q{Žiadne čakajúce úlohy?}
-    Q -->|Áno| R{Počet replikácií > min?}
-    R -->|Áno| S[Zníženie počtu replikácií]
-    R -->|Nie| T[Zachovanie minimálneho počtu]
-    Q -->|Nie| U[Zachovanie aktuálneho počtu]
+    %% Paralelná kontrola pre škálovanie nadol
+    P[KEDA Scaler - Scale Down] --> Q{Cooldown obdobie uplynulo?}
+    Q -->|Nie| R[Čakanie na cooldown]
+    R --> Q
+    Q -->|Áno| S{Žiadne čakajúce úlohy?}
+    S -->|Áno| T{Počet replikácií > min?}
+    T -->|Áno| U[Zníženie počtu replikácií]
+    T -->|Nie| V[Zachovanie minimálneho počtu]
+    S -->|Nie| W[Zachovanie aktuálneho počtu]
     
-    S --> V[Odstránenie Pod]
-    V --> W[Agent sa odpojí z poolu]
+    U --> X[Odstránenie Pod]
+    X --> Y[Agent sa odpojí z poolu]
     
     subgraph "Kubernetes Cluster"
         F
@@ -82,6 +84,8 @@ flowchart TD
         T
         U
         V
+        W
+        X
     end
     
     subgraph "Azure DevOps"
@@ -89,16 +93,17 @@ flowchart TD
         B
         D
         L
-        W
+        Y
     end
     
     subgraph "KEDA"
         C
+        P
     end
     
     subgraph "StatefulSet Pool"
         J
-        V
+        X
     end
 ```
 
