@@ -43,7 +43,7 @@ graph TB
         ADO_POOL[Agent Pool<br/>Čakajúce úlohy]
     end
     
-    subgraph "Kubernetes Cluster (K3s - Single Node)"
+    subgraph "K3s - Single Node cluster"
         subgraph "KEDA"
             KEDA_SCALER[KEDA Scaler<br/>Monitoruje ADO Pool]
         end
