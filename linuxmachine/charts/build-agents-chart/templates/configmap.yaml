@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: build-agent-config-{{ .Values.pool.agentNameBase }}
+data:
+  AZP_URL: "https://dev.azure.com/krossk"
+  AzurePS: "3.0.1"
+  AZP_POOL: {{ .Values.pool.name | quote }} 

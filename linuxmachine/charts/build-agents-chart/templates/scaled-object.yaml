@@ -1,0 +1,20 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: "{{ .Values.pool.agentNameBase }}-scaled-object"
+spec:
+  scaleTargetRef:
+    name: {{ .Values.pool.agentNameBase }}
+    kind: StatefulSet
+  pollingInterval: {{ .Values.pool.scaler.pollingInterval }}
+  cooldownPeriod: {{ .Values.pool.scaler.cooldownPeriod }}
+  minReplicaCount: {{ .Values.pool.scaler.minReplicas }}
+  maxReplicaCount: {{ .Values.pool.scaler.maxReplicas }}
+  triggers:
+  - type: azure-pipelines
+    metadata:
+      poolName: {{ .Values.pool.name | quote }}
+      organizationURLFromEnv: "AZP_URL"
+      targetPipelinesQueueLength: {{ .Values.pool.scaler.targetPipelinesQueueLength | quote }}
+    authenticationRef:
+      name: azure-pipelines-trigger-auth 

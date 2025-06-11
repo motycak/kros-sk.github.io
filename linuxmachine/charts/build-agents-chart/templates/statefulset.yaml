@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.pool.agentNameBase }}
+  labels:
+    app: build-agent-{{ .Values.pool.agentNameBase }}-statefulset
+    pool: {{ .Values.pool.agentNameBase }}
+spec:
+  serviceName: "{{ .Values.pool.agentNameBase }}-service"
+  replicas: {{ .Values.pool.replicas }}
+  ordinals:
+    start: 1
+  selector:
+    matchLabels:
+      app: build-agent-{{ .Values.pool.agentNameBase }}
+      pool: {{ .Values.pool.agentNameBase }}
+  template:
+    metadata:
+      labels:
+        app: build-agent-{{ .Values.pool.agentNameBase }}
+        pool: {{ .Values.pool.agentNameBase }}
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: "{{ .Values.pool.agentNameBase }}-container"
+        image: "{{ .Values.pool.image.repository }}:{{ .Values.pool.image.tag }}"
+        imagePullPolicy: "Always"
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: AZP_AGENT_NAME
+          value: "$(POD_NAME)-build4"
+        - name: KUBECONFIG
+          value: "/opt/Agents/$(AZP_AGENT_NAME)/kubeconfig"
+        - name: DEVEXTREME_KEY
+          valueFrom:
+            secretKeyRef:
+              name: devextreme-key
+              key: DEVEXTREME_KEY
+        - name: AZURE_PAT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: azure-pat-token
+              key: AZURE_PAT_TOKEN
+        envFrom:
+        - configMapRef:
+            name: build-agent-config-{{ .Values.pool.agentNameBase }}
+        volumeMounts:
+        - name: agent-cache
+          mountPath: /opt/Agents/cache
+      volumes:
+      - name: agent-cache
+        persistentVolumeClaim:
+          claimName: agent-cache-pvc 

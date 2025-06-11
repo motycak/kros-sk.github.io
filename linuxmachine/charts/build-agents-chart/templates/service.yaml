@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Values.pool.agentNameBase }}-service"
+spec:
+  clusterIP: None
+  selector:
+    app: build-agent-{{ .Values.pool.agentNameBase }}
+    pool: {{ .Values.pool.agentNameBase }} 

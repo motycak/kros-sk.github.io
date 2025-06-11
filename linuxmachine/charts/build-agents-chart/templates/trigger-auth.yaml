@@ -1,0 +1,9 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: azure-pipelines-trigger-auth
+spec:
+  secretTargetRef:
+    - parameter: personalAccessToken
+      name: azure-pat-token
+      key: AZURE_PAT_TOKEN 
