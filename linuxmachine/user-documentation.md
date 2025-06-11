@@ -43,71 +43,50 @@ graph TB
         ADO_POOL[Agent Pool<br/>Čakajúce úlohy]
     end
     
-    subgraph "K3s - Single Node Cluster"
-        subgraph "KEDA (Kubernetes Event-driven Autoscaling)"
-            KEDA_SCALER[KEDA Scaler<br/>Monitoruje ADO Pool<br/>Polling: 30s, Cooldown: 300s]
-        end
-        
-        subgraph "Kubernetes Resources"
-            CONFIG[ConfigMap<br/>build-agent-config<br/>AZP_URL, AZP_POOL]
-            SECRET[Secret<br/>azure-pat-token<br/>Personal Access Token]
-            SERVICE[Service<br/>Headless Service<br/>Service Discovery]
+    subgraph "K3s - Single Node cluster"
+        subgraph "KEDA"
+            KEDA_SCALER[KEDA Scaler<br/>Monitoruje ADO Pool]
         end
         
         subgraph "StatefulSet - Build Pool"
             subgraph "Pod 1"
-                AGENT1[Azure DevOps Agent<br/>Docker Container<br/>POD_NAME-1-build4]
+                AGENT1[Azure DevOps Agent<br/>Docker Container]
             end
             subgraph "Pod 2"
-                AGENT2[Azure DevOps Agent<br/>Docker Container<br/>POD_NAME-2-build4]
+                AGENT2[Azure DevOps Agent<br/>Docker Container]
             end
             subgraph "Pod N"
-                AGENTN[Azure DevOps Agent<br/>Docker Container<br/>POD_NAME-N-build4]
+                AGENTN[Azure DevOps Agent<br/>Docker Container]
             end
         end
         
         subgraph "Persistent Storage"
-            PVC[PersistentVolumeClaim<br/>agent-cache-pvc<br/>100Gi Local Storage<br/>ReadWriteOnce]
+            PVC[PersistentVolumeClaim<br/>Cache Storage]
         end
         
         subgraph "Kubernetes API"
-            K8S_API[StatefulSet Controller<br/>Ordinálne číslovanie od 1]
+            K8S_API[Kubernetes API<br/>StatefulSet Management]
         end
     end
     
     subgraph "Helm Charts"
-        HELM[Helm Chart<br/>build-agents-chart<br/>Konfigurácia & Deployment]
+        HELM[Helm Charts<br/>Konfigurácia & Deployment]
     end
     
     %% Connections
     ADO --> ADO_POOL
     ADO_POOL --> KEDA_SCALER
     KEDA_SCALER --> K8S_API
+    K8S_API --> StatefulSet
     HELM --> K8S_API
-    
-    K8S_API --> AGENT1
-    K8S_API --> AGENT2
-    K8S_API --> AGENTN
     
     AGENT1 --> PVC
     AGENT2 --> PVC
     AGENTN --> PVC
     
-    AGENT1 --> CONFIG
-    AGENT2 --> CONFIG
-    AGENTN --> CONFIG
-    
-    AGENT1 --> SECRET
-    AGENT2 --> SECRET
-    AGENTN --> SECRET
-    
     AGENT1 --> ADO
     AGENT2 --> ADO
     AGENTN --> ADO
-    
-    SERVICE --> AGENT1
-    SERVICE --> AGENT2
-    SERVICE --> AGENTN
     
     %% Styling
     classDef azure fill:#0078d4,stroke:#005a9e,stroke-width:2px,color:#fff
@@ -115,14 +94,12 @@ graph TB
     classDef k8s fill:#326ce5,stroke:#1e3a8a,stroke-width:2px,color:#fff
     classDef helm fill:#0f1689,stroke:#0f1689,stroke-width:2px,color:#fff
     classDef storage fill:#ffd700,stroke:#ff8c00,stroke-width:2px,color:#000
-    classDef resources fill:#4caf50,stroke:#2e7d32,stroke-width:2px,color:#fff
     
     class ADO,ADO_POOL azure
     class KEDA_SCALER keda
     class AGENT1,AGENT2,AGENTN,K8S_API k8s
     class HELM helm
     class PVC storage
-    class CONFIG,SECRET,SERVICE resources
 ```
 
 ## Proces škálovania
