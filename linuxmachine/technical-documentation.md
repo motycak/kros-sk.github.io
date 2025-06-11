@@ -95,11 +95,11 @@ Helm templates sú rozdelené do menších súborov podľa použitých objektov:
 
 Konfiguračné súbory pre rôzne typy agent poolov
 
-- `values-default.yaml` - Default agent pool
-- `values-build-be.yaml` - Build BE agent pool
-- `values-build-fe.yaml` - Build FE agent pool
-- `values-deploy-be.yaml` - Deploy BE agent pool
-- `values-deploy-fe.yaml` - Deploy FE agent pool
+- [`values-default.yaml`](./charts/build-agents-chart/values/values-default.yaml) - Default agent pool
+- [`values-build-be.yaml`](./charts/build-agents-chart/values/values-build-be.yaml) - Build BE agent pool
+- [`values-build-fe.yaml`](./charts/build-agents-chart/values/values-build-fe.yaml) - Build FE agent pool
+- [`values-deploy-be.yaml`](./charts/build-agents-chart/values/values-deploy-be.yaml) - Deploy BE agent pool
+- [`values-deploy-fe.yaml`](./charts/build-agents-chart/values/values-deploy-fe.yaml) - Deploy FE agent pool
 
 **Konfigurácia obsahuje**:
 
