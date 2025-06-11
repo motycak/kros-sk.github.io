@@ -90,11 +90,11 @@ graph TB
     ADO_POOL --> KEDA_SCALER1
     ADO_POOL --> KEDA_SCALERN
     
-    KEDA_SCALER1 --> StatefulSet
-    KEDA_SCALERN --> StatefulSet
+    KEDA_SCALER1 --> "StatefulSet - Pool 1"
+    KEDA_SCALERN --> "StatefulSet - Pool N"
     
-    HELM --> StatefulSet
-    HELM --> StatefulSet
+    HELM --> "StatefulSet - Pool 1"
+    HELM --> "StatefulSet - Pool N"
     
     AGENT1_1 --> PVC
     AGENT1_2 --> PVC
