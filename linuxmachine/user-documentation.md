@@ -44,28 +44,41 @@ graph TB
     end
     
     subgraph "K3s - Single Node cluster"
-        subgraph "KEDA"
-            KEDA_SCALER[KEDA Scaler<br/>Monitoruje ADO Pool]
+        subgraph "KEDA Scaler 1"
+            KEDA_SCALER1[KEDA Scaler<br/>Pool 1]
         end
         
-        subgraph "StatefulSet - Build Pool"
-            subgraph "Pod 1"
-                AGENT1[Azure DevOps Agent<br/>Docker kontajner]
+        subgraph "KEDA Scaler N"
+            KEDA_SCALERN[KEDA Scaler<br/>Pool N]
+        end
+        
+        subgraph "StatefulSet - Pool 1"
+            subgraph "Pod 1-1"
+                AGENT1_1[Azure DevOps Agent<br/>Docker kontajner]
             end
-            subgraph "Pod 2"
-                AGENT2[Azure DevOps Agent<br/>Docker kontajner]
+            subgraph "Pod 1-2"
+                AGENT1_2[Azure DevOps Agent<br/>Docker kontajner]
             end
-            subgraph "Pod N"
-                AGENTN[Azure DevOps Agent<br/>Docker kontajner]
+            subgraph "Pod 1-N"
+                AGENT1_N[Azure DevOps Agent<br/>Docker kontajner]
+            end
+        end
+        
+        subgraph "StatefulSet - Pool N"
+            subgraph "Pod N-1"
+                AGENTN_1[Azure DevOps Agent<br/>Docker kontajner]
+            end
+            subgraph "Pod N-2"
+                AGENTN_2[Azure DevOps Agent<br/>Docker kontajner]
+            end
+            subgraph "Pod N-N"
+                AGENTN_N[Azure DevOps Agent<br/>Docker kontajner]
             end
         end
         
         subgraph "Persistent Storage"
-            PVC[PersistentVolumeClaim<br/>Cache úložisko]
-        end
-        
-        subgraph "Kubernetes API"
-            K8S_API[StatefulSet Management]
+            PVC1[PersistentVolumeClaim<br/>Cache úložisko Pool 1]
+            PVCN[PersistentVolumeClaim<br/>Cache úložisko Pool N]
         end
     end
     
@@ -75,17 +88,29 @@ graph TB
     
     %% Connections
     ADO --> ADO_POOL
-    ADO_POOL --> KEDA_SCALER
-    KEDA_SCALER --> K8S_API
-    HELM --> K8S_API
+    ADO_POOL --> KEDA_SCALER1
+    ADO_POOL --> KEDA_SCALERN
     
-    AGENT1 --> PVC
-    AGENT2 --> PVC
-    AGENTN --> PVC
+    KEDA_SCALER1 --> StatefulSet
+    KEDA_SCALERN --> StatefulSet
     
-    AGENT1 --> ADO
-    AGENT2 --> ADO
-    AGENTN --> ADO
+    HELM --> StatefulSet
+    HELM --> StatefulSet
+    
+    AGENT1_1 --> PVC1
+    AGENT1_2 --> PVC1
+    AGENT1_N --> PVC1
+    
+    AGENTN_1 --> PVCN
+    AGENTN_2 --> PVCN
+    AGENTN_N --> PVCN
+    
+    AGENT1_1 --> ADO
+    AGENT1_2 --> ADO
+    AGENT1_N --> ADO
+    AGENTN_1 --> ADO
+    AGENTN_2 --> ADO
+    AGENTN_N --> ADO
     
     %% Styling
     classDef azure fill:#0078d4,stroke:#005a9e,stroke-width:2px,color:#fff
@@ -95,10 +120,10 @@ graph TB
     classDef storage fill:#ffd700,stroke:#ff8c00,stroke-width:2px,color:#000
     
     class ADO,ADO_POOL azure
-    class KEDA_SCALER keda
-    class AGENT1,AGENT2,AGENTN,K8S_API k8s
+    class KEDA_SCALER1,KEDA_SCALERN keda
+    class AGENT1_1,AGENT1_2,AGENT1_N,AGENTN_1,AGENTN_2,AGENTN_N k8s
     class HELM helm
-    class PVC storage
+    class PVC1,PVCN storage
 ```
 
 ## Proces škálovania
