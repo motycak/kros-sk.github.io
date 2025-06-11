@@ -34,7 +34,7 @@ Všetci agenti bežia v Docker kontajneroch, čo zabezpečuje:
 
 Na mašine sa využívajú Helm charts pre centralizovanú správu konfigurácie a nasadenia poolov do kubernetesu.
 
-## Architektúra poolu
+## Proces škálovania
 
 ```mermaid
 flowchart TD
