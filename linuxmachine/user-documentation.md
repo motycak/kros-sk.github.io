@@ -83,8 +83,7 @@ graph TB
     KEDA_SCALER1 --> STATEFULSET_POOL1
     KEDA_SCALERN --> STATEFULSET_POOLN
     
-    HELM --> STATEFULSET_POOL1
-    HELM --> STATEFULSET_POOLN
+    HELM --> K3s - Single Node cluster
     
     AGENT1_1 --> PVC
     AGENT1_2 --> PVC
