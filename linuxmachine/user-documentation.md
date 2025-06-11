@@ -46,8 +46,7 @@ flowchart TD
     F -->|Áno| G[Zvýšenie počtu replikácií]
     F -->|Nie| H[Dosiahnutý max limit]
     
-    G --> I[Kubernetes API]
-    I --> J[Vytvorenie nového Pod v StatefulSet]
+    G --> J[Vytvorenie nového Podu]
     J --> K[Naštartovanie Docker kontajneru]
     K --> L[Nový Azure Agent]
     
@@ -60,7 +59,7 @@ flowchart TD
     T -->|Nie| V[Zachovanie minimálneho počtu]
     S -->|Nie| W[Zachovanie aktuálneho počtu]
     
-    U --> X[Odstránenie Pod]
+    U --> X[Odstránenie Podu]
     
     subgraph "KEDA"
         C
@@ -78,7 +77,7 @@ flowchart TD
         W
     end
     
-    subgraph "Azure DevOps Pool"
+    subgraph "Azure DevOps Agent Pool"
         A
         B
         D
