@@ -38,7 +38,7 @@ Na mašine sa využívajú Helm charts pre centralizovanú správu konfigurácie
 
 ```mermaid
 graph TB
-    subgraph "K3s - Single Node cluster"
+    subgraph K3s[K3s - Single Node cluster]
         subgraph "KEDA Scaler 1"
             KEDA_SCALER1[KEDA Scaler<br/>Pool 1]
         end
@@ -83,7 +83,7 @@ graph TB
     KEDA_SCALER1 --> STATEFULSET_POOL1
     KEDA_SCALERN --> STATEFULSET_POOLN
     
-    HELM --> K3s - Single Node cluster
+    HELM --> K3s
     
     AGENT1_1 --> PVC
     AGENT1_2 --> PVC
