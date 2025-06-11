@@ -39,7 +39,7 @@ Na mašine sa využívajú Helm charts pre centralizovanú správu konfigurácie
 ```mermaid
 graph TB
     subgraph "Azure DevOps"
-        ADO[Azure DevOps<br/>Pipeline & Jobs]
+        ADO[Azure DevOps<br/>Pipeline Jobs]
         ADO_POOL[Agent Pool<br/>Čakajúce úlohy]
     end
     
@@ -50,18 +50,18 @@ graph TB
         
         subgraph "StatefulSet - Build Pool"
             subgraph "Pod 1"
-                AGENT1[Azure DevOps Agent<br/>Docker Container]
+                AGENT1[Azure DevOps Agent<br/>Docker kontajner]
             end
             subgraph "Pod 2"
-                AGENT2[Azure DevOps Agent<br/>Docker Container]
+                AGENT2[Azure DevOps Agent<br/>Docker kontajner]
             end
             subgraph "Pod N"
-                AGENTN[Azure DevOps Agent<br/>Docker Container]
+                AGENTN[Azure DevOps Agent<br/>Docker kontajner]
             end
         end
         
         subgraph "Persistent Storage"
-            PVC[PersistentVolumeClaim<br/>Cache Storage]
+            PVC[PersistentVolumeClaim<br/>Cache úložisko]
         end
         
         subgraph "Kubernetes API"
@@ -77,7 +77,6 @@ graph TB
     ADO --> ADO_POOL
     ADO_POOL --> KEDA_SCALER
     KEDA_SCALER --> K8S_API
-    K8S_API --> StatefulSet
     HELM --> K8S_API
     
     AGENT1 --> PVC
