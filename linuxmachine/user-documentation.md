@@ -49,8 +49,10 @@ flowchart TD
     G --> J[Vytvorenie nového Podu]
     J --> K[Naštartovanie Docker kontajneru]
     K --> L[Nový Azure Agent]
+    G --> M[Začiatok merania cooldown]
     
-    P[KEDA Scaler - Scale Down] --> Q{Cooldown obdobie uplynulo?}
+    M --> P[KEDA Scaler - Scale Down]
+    P --> Q{Cooldown obdobie uplynulo?}
     Q -->|Nie| R[Čakanie na cooldown]
     R --> Q
     Q -->|Áno| S{Žiadne čakajúce úlohy?}
@@ -66,7 +68,7 @@ flowchart TD
         F
         G
         H
-        I
+        M
         P
         Q
         R
