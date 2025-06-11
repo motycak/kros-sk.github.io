@@ -38,11 +38,6 @@ Na mašine sa využívajú Helm charts pre centralizovanú správu konfigurácie
 
 ```mermaid
 graph TB
-    subgraph "Azure DevOps"
-        ADO[Azure DevOps<br/>Pipeline Jobs]
-        ADO_POOL[Agent Pool<br/>Čakajúce úlohy]
-    end
-    
     subgraph "K3s - Single Node cluster"
         subgraph "KEDA Scaler 1"
             KEDA_SCALER1[KEDA Scaler<br/>Pool 1]
@@ -86,10 +81,6 @@ graph TB
     end
     
     %% Connections
-    ADO --> ADO_POOL
-    ADO_POOL --> KEDA_SCALER1
-    ADO_POOL --> KEDA_SCALERN
-    
     KEDA_SCALER1 --> STATEFULSET_POOL1
     KEDA_SCALERN --> STATEFULSET_POOLN
     
@@ -103,21 +94,12 @@ graph TB
     AGENTN_2 --> PVC
     AGENTN_N --> PVC
     
-    AGENT1_1 --> ADO
-    AGENT1_2 --> ADO
-    AGENT1_N --> ADO
-    AGENTN_1 --> ADO
-    AGENTN_2 --> ADO
-    AGENTN_N --> ADO
-    
     %% Styling
-    classDef azure fill:#0078d4,stroke:#005a9e,stroke-width:2px,color:#fff
     classDef keda fill:#ff6b35,stroke:#d84315,stroke-width:2px,color:#fff
     classDef k8s fill:#326ce5,stroke:#1e3a8a,stroke-width:2px,color:#fff
     classDef helm fill:#0f1689,stroke:#0f1689,stroke-width:2px,color:#fff
     classDef storage fill:#ffd700,stroke:#ff8c00,stroke-width:2px,color:#000
     
-    class ADO,ADO_POOL azure
     class KEDA_SCALER1,KEDA_SCALERN keda
     class AGENT1_1,AGENT1_2,AGENT1_N,AGENTN_1,AGENTN_2,AGENTN_N k8s
     class HELM helm
