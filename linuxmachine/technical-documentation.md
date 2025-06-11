@@ -59,19 +59,36 @@ Hlavný inicializačný skript pre Kubernetes agentov
 
 Nachádzajú sa v priečinku [`charts/build-agents-chart/`](./charts/build-agents-chart/). Tieto súbory sa prekopírujú na mašinu do vytvoreného Helm chart folderu. Vytvárane cez `helm create build-agents-chart`.
 
-#### [`charts/build-agents-chart/templates/pool-manifest.yaml`](./charts/build-agents-chart/templates/pool-manifest.yaml)
+#### Templates
 
-Hlavný Helm template pre vytvorenie Kubernetes objektov
+Helm templates sú rozdelené do menších súborov podľa použitých objektov:
+
+**[`charts/build-agents-chart/templates/pvc.yaml`](./charts/build-agents-chart/templates/pvc.yaml)**
 
 - **PersistentVolumeClaim**: Vytvára 100Gi storage pre cache agentov
+
+**[`charts/build-agents-chart/templates/trigger-auth.yaml`](./charts/build-agents-chart/templates/trigger-auth.yaml)**
+
 - **TriggerAuthentication**: Konfiguruje autentifikáciu pre KEDA s Azure PAT tokenom
+
+**[`charts/build-agents-chart/templates/configmap.yaml`](./charts/build-agents-chart/templates/configmap.yaml)**
+
 - **ConfigMap**: Definuje variables pre agenta (AZP_URL, AZP_POOL, AzurePS verzia)
+
+**[`charts/build-agents-chart/templates/statefulset.yaml`](./charts/build-agents-chart/templates/statefulset.yaml)**
+
 - **StatefulSet**: Hlavný objekt pre spustenie agentov s:
   - Konfiguráciou image z Azure Container Registry (obsahuje image z [`azure-agent-linux.dockerfile`](./azure-agent-linux.dockerfile))
   - Environment premennými a secrets
   - Volume mount pre cache
   - Image pull secrets pre Azure Container Registry
+
+**[`charts/build-agents-chart/templates/service.yaml`](./charts/build-agents-chart/templates/service.yaml)**
+
 - **Service**: Headless service pre StatefulSet
+
+**[`charts/build-agents-chart/templates/scaled-object.yaml`](./charts/build-agents-chart/templates/scaled-object.yaml)**
+
 - **ScaledObject**: KEDA objekt pre autoscaling na základe Azure DevOps queue
 
 #### [`charts/build-agents-chart/values/`](./charts/build-agents-chart/values/) súbory
