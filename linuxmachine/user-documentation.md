@@ -160,20 +160,6 @@ flowchart TD
         K
         X
     end
-    
-    classDef azureDevOps fill:#0078d4,stroke:#106ebe,stroke-width:2px,color:#ffffff
-    classDef keda fill:#ff6b35,stroke:#e55a2b,stroke-width:2px,color:#ffffff
-    classDef statefulSet fill:#28a745,stroke:#1e7e34,stroke-width:2px,color:#ffffff
-    classDef decision fill:#ffc107,stroke:#e0a800,stroke-width:2px,color:#000000
-    classDef action fill:#17a2b8,stroke:#138496,stroke-width:2px,color:#ffffff
-    classDef wait fill:#6c757d,stroke:#545b62,stroke-width:2px,color:#ffffff
-    
-    class A,L azureDevOps
-    class C,F,G,H,M,P,Q,R,S,T,U,V,W keda
-    class J,K,X statefulSet
-    class B,D decision
-    class G,U action
-    class R wait
 ```
 
 ## Kľúčové komponenty
