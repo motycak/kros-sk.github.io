@@ -49,12 +49,7 @@ flowchart TD
     G --> I[Kubernetes API]
     I --> J[Vytvorenie nového Pod v StatefulSet]
     J --> K[Docker Container]
-    K --> L[Azure Agent]
-    L --> M[Spracovanie úlohy]
-    
-    M --> N{Úloha dokončená?}
-    N -->|Nie| M
-    N -->|Áno| O[Agent pokračuje v čakaní na ďalšie úlohy]
+    K --> L[Nový Azure Agent]
     
     %% Paralelná kontrola pre škálovanie nadol
     P[KEDA Scaler - Scale Down] --> Q{Cooldown obdobie uplynulo?}
@@ -67,7 +62,6 @@ flowchart TD
     S -->|Nie| W[Zachovanie aktuálneho počtu]
     
     U --> X[Odstránenie Pod]
-    X --> Y[Agent sa odpojí z poolu]
     
     subgraph "Kubernetes Cluster"
         F
@@ -76,7 +70,6 @@ flowchart TD
         I
         J
         K
-        O
         P
         Q
         R
