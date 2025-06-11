@@ -69,7 +69,6 @@ flowchart TD
         G
         H
         I
-        K
         P
         Q
         R
@@ -89,6 +88,7 @@ flowchart TD
     
     subgraph "StatefulSet Pool"
         J
+        K
         X
     end
 ```
