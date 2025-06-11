@@ -1,142 +1,43 @@
-# Technická dokumentácia - Linux Build Machine
+# Technická dokumentácia
 
-## Technická architektúra
+Popis technického riešenia pre rozbehanie kontajnerizovaných build agentov na Linuxových mašinách.
 
-### Systémové požiadavky
+## Použité technológie
 
-- **OS**: Ubuntu Linux (odporúčané LTS verzie)
-- **RAM**: Minimálne 8GB (odporúčané 16GB+)
-- **CPU**: Minimálne 4 jadrá
-- **Disk**: Minimálne 50GB voľného miesta
-- **Sieť**: Stabilné internetové pripojenie
-
-### Technologický stack
-
-- **Kubernetes**: K3s (odľahčená distribúcia)
+- **Kubernetes**: K3s
 - **Container Runtime**: Docker
-- **Orchestration**: Helm v3
-- **Autoscaling**: KEDA v2.17.0
-- **Registry**: Azure Container Registry (ACR)
+- **Pool management**: Helm
+- **Autoscaling**: KEDA
+- **Registry**: Azure Container Registry
 - **CI/CD**: Azure DevOps
 
 ## Detailná architektúra
 
 ### Kubernetes Cluster (K3s)
 
-K3s je single-node Kubernetes cluster optimalizovaný pre edge computing a IoT zariadenia.
-
-**Kľúčové komponenty:**
-
-- **kube-apiserver**: REST API server
-- **kube-scheduler**: Plánovač podov
-- **kube-controller-manager**: Kontrolér pre systémové objekty
-- **kubelet**: Agent na každom node
-- **containerd**: Container runtime
-- **SQLite**: Embedded databáza (namiesto etcd)
-
-**Konfigurácia:**
-
-```yaml
-# /etc/rancher/k3s/k3s.yaml
-apiVersion: v1
-kind: Config
-clusters:
-- cluster:
-    server: https://127.0.0.1:6443
-    certificate-authority-data: <CA_DATA>
-contexts:
-- context:
-    cluster: default
-    user: default
-current-context: default
-users:
-- name: default
-  user:
-    client-certificate-data: <CERT_DATA>
-    client-key-data: <KEY_DATA>
-```
+Pre cluster je použitá K3s, ktorá je odľahčená verzia Kubernetes.
 
 ### KEDA (Kubernetes Event-driven Autoscaling)
 
-KEDA poskytuje event-driven autoscaling pre Kubernetes.
+KEDA poskytuje automatické škálovanie pre Kubernetes. My konkrétne používame škálovanie na základe počtu čakajúcich úloh v Azure DevOps.
 
-**Architektúra KEDA:**
+**Použité KEDA objekty:**
 
 - **ScaledObject**: Definuje autoscaling pravidlá
-- **ScaledJob**: Pre job-based workload
 - **TriggerAuthentication**: Autentifikácia pre externé systémy
-- **Scaler**: Komponent pre konkrétny externý systém
-
-**Azure DevOps Scaler konfigurácia:**
-
-```yaml
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: azure-devops-scaler
-spec:
-  scaleTargetRef:
-    name: azure-agent-deployment
-  minReplicaCount: 0
-  maxReplicaCount: 10
-  triggers:
-  - type: azure-pipelines
-    metadata:
-      organizationURLFromEnv: "AZURE_DEVOPS_ORGANIZATION"
-      personalAccessTokenFromEnv: "AZURE_PAT_TOKEN"
-      poolID: "1"
-      targetPipelinesQueueLength: "1"
-```
 
 ### Docker Image Architektúra
 
-**Base Image**: Ubuntu 20.04 LTS
-**Runtime**: .NET Core / Node.js / Java
-**Build Tools**: Git, Azure CLI, Docker CLI
+Docker image sa vytvára na základe [azure-agent-linux.dockerfile](./azure-agent-linux.dockerfile). Na ktorom sa spúšťa [start-k8s.sh](./start-k8s.sh) skript, ktorý sa stará o pripojenie agenta k Azure DevOps a jeho spustenie.
 
-**Dockerfile štruktúra:**
+### Helm Chart štruktúra
 
-```dockerfile
-FROM ubuntu:20.04
-# Systémové závislosti
-RUN apt-get update && apt-get install -y \
-    curl \
-    git \
-    wget \
-    unzip \
-    software-properties-common
-
-# .NET Core inštalácia
-RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb \
-    && dpkg -i packages-microsoft-prod.deb \
-    && apt-get update \
-    && apt-get install -y dotnet-sdk-6.0
-
-# Node.js inštalácia
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
-
-# Azure DevOps Agent
-RUN mkdir /azp
-COPY start.sh /azp/
-RUN chmod +x /azp/start.sh
-
-ENTRYPOINT ["/azp/start.sh"]
-```
-
-### Helm Chart Architektúra
-
-**Chart štruktúra:**
+Všetky potrebné súbory pre vytvorenie Helm Chart sú v [build-agents-chart](./charts/build-agents-chart/).
 
 ```
 build-agents-chart/
-├── Chart.yaml
 ├── templates/
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   ├── configmap.yaml
-│   ├── secret.yaml
-│   └── scaledobject.yaml
+│   ├── pool-manifest.yaml
 └── values/
     ├── values-build-be.yaml
     ├── values-build-fe.yaml
@@ -145,41 +46,7 @@ build-agents-chart/
     └── values-deploy-fe.yaml
 ```
 
-**Kľúčové template súbory:**
-
-**deployment.yaml:**
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ include "build-agents-chart.fullname" . }}
-spec:
-  replicas: {{ .Values.replicaCount }}
-  selector:
-    matchLabels:
-      {{- include "build-agents-chart.selectorLabels" . | nindent 6 }}
-  template:
-    metadata:
-      labels:
-        {{- include "build-agents-chart.selectorLabels" . | nindent 8 }}
-    spec:
-      imagePullSecrets:
-        - name: {{ .Values.imagePullSecrets.name }}
-      containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          env:
-            - name: AZP_URL
-              value: {{ .Values.azureDevOps.url }}
-            - name: AZP_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: azure-pat-token
-                  key: AZURE_PAT_TOKEN
-            - name: AZP_POOL
-              value: {{ .Values.azureDevOps.pool }}
-```
+Tieto súbory sa prekopírujú z repozitára na Linuxové mašiny. Na základe nich potom vieme manažovať Agentové Pooly.
 
 ## Sieťová architektúra
 
