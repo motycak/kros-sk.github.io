@@ -161,12 +161,12 @@ flowchart TD
         X
     end
     
-    classDef azureDevOps fill:#0078d4,stroke:#106ebe,stroke-width:2px,color:#ffffff
-    classDef keda fill:#ff6b35,stroke:#e55a2b,stroke-width:2px,color:#ffffff
-    classDef statefulSet fill:#28a745,stroke:#1e7e34,stroke-width:2px,color:#ffffff
-    classDef decision fill:#ffc107,stroke:#e0a800,stroke-width:2px,color:#000000
-    classDef action fill:#17a2b8,stroke:#138496,stroke-width:2px,color:#ffffff
-    classDef wait fill:#6c757d,stroke:#545b62,stroke-width:2px,color:#ffffff
+    classDef azureDevOps fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    classDef keda fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    classDef statefulSet fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
+    classDef decision fill:#fff8e1,stroke:#f57f17,stroke-width:2px,color:#000
+    classDef action fill:#e1f5fe,stroke:#0277bd,stroke-width:2px,color:#000
+    classDef wait fill:#f5f5f5,stroke:#616161,stroke-width:2px,color:#000
     
     class A,L azureDevOps
     class C,F,G,H,M,P,Q,R,S,T,U,V,W keda
