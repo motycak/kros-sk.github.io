@@ -49,25 +49,25 @@ graph TB
         
         subgraph STATEFULSET_POOL1["StatefulSet - Agent Pool 1"]
             subgraph "Pod 1-1"
-                AGENT1_1[Azure DevOps Agent<br/>Docker kontajner]
+                AGENT1_1[Build Agent<br/>Docker kontajner]
             end
             subgraph "Pod 1-2"
-                AGENT1_2[Azure DevOps Agent<br/>Docker kontajner]
+                AGENT1_2[Build Agent<br/>Docker kontajner]
             end
             subgraph "Pod 1-N"
-                AGENT1_N[Azure DevOps Agent<br/>Docker kontajner]
+                AGENT1_N[Build Agent<br/>Docker kontajner]
             end
         end
         
         subgraph STATEFULSET_POOLN["StatefulSet - Agent Pool N"]
             subgraph "Pod N-1"
-                AGENTN_1[Azure DevOps Agent<br/>Docker kontajner]
+                AGENTN_1[Build Agent<br/>Docker kontajner]
             end
             subgraph "Pod N-2"
-                AGENTN_2[Azure DevOps Agent<br/>Docker kontajner]
+                AGENTN_2[Build Agent<br/>Docker kontajner]
             end
             subgraph "Pod N-N"
-                AGENTN_N[Azure DevOps Agent<br/>Docker kontajner]
+                AGENTN_N[Build Agent<br/>Docker kontajner]
             end
         end
         
