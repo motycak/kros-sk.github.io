@@ -88,10 +88,10 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 WORKDIR /opt/Agents
 
 # Cache folders and variables
-RUN mkdir -p /opt/Agents/cache/cypress \
-    /opt/Agents/cache/npm \
-    /opt/Agents/cache/nuget \
-    /opt/Agents/cache/nx
+# RUN mkdir -p /opt/Agents/cache/cypress \
+#     /opt/Agents/cache/npm \
+#     /opt/Agents/cache/nuget \
+#     /opt/Agents/cache/nx
 ENV CYPRESS_CACHE_FOLDER="/opt/Agents/cache/cypress" \
     NPM_CONFIG_CACHE="/opt/Agents/cache/npm" \
     NUGET_PACKAGES="/opt/Agents/cache/nuget" \
