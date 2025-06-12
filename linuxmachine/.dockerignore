@@ -1,0 +1,41 @@
+# Git súbory
+.git
+.gitignore
+.gitattributes
+
+# Dokumentácia
+README.md
+*.md
+
+# IDE súbory
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Log súbory
+*.log
+logs/
+
+# Cache adresáre
+node_modules/
+.npm/
+.cache/
+dist/
+build/
+
+# Dočasné súbory
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Docker súbory
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# CI/CD súbory
+.github/
+.azure/
+azure-pipelines*.yml 
