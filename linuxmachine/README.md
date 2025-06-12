@@ -214,8 +214,7 @@ kubectl create secret docker-registry acr-secret \
 ### Vytvorenie Helm chartu
 
 Vytváranie podov pre jednotlivé pooly je riešené cez nástroj [Helm](https://helm.sh/). Pre nasadenie sa využíva spoločný template manifest pre všetky pooly, do ktorých sa dosadia hodnoty podľa toho pre aký pool sa vytvára.
-Hodnoty sa dosadzujú cez values súbory v adresári [charts/build-agents-chart/values](charts/build-agents-chart/values). Každý pool má 
-vlastný values súbor.
+Hodnoty sa dosadzujú cez values súbory v adresári [charts/build-agents-chart/values](charts/build-agents-chart/values). Každý pool má vlastný values súbor.
 
 ```bash
 mkdir /opt/Agents/agentCharts
@@ -280,8 +279,7 @@ Alternatívne môžeme použiť k9s. Dokumentácia: [k9s](https://k9scli.io/)
 
 ### Aktualizácia build agentov
 
-Ak potrebujeme upraviť build agentov, t.j. upravovať chart (buď values alebo samotný template), tak môžeme updatovať release cez `helm 
-upgrade`.
+Ak potrebujeme upraviť build agentov, t.j. upravovať chart (buď values alebo samotný template), tak môžeme updatovať release cez `helm upgrade`.
 
 ```bash
 helm upgrade [pomenovanie_release] /opt/Agents/agentCharts/build-agents-chart \
