@@ -50,12 +50,6 @@ RUN mkdir -p /opt/Agents/tools && \
     dotnet tool install Kros.VariableSubstitution --tool-path /opt/Agents/tools
 ENV PATH="$PATH:/opt/Agents/tools"
 
-# Installing GitHub CLI (not needed anymore)
-# RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
-#     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
-#     apt-get update && \
-#     apt-get install -y gh
-
 # Installing Node.js (latest LTS version)
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
     apt-get update && \
@@ -87,11 +81,6 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 
 WORKDIR /opt/Agents
 
-# Cache folders and variables
-# RUN mkdir -p /opt/Agents/cache/cypress \
-#     /opt/Agents/cache/npm \
-#     /opt/Agents/cache/nuget \
-#     /opt/Agents/cache/nx
 ENV CYPRESS_CACHE_FOLDER="/opt/Agents/cache/cypress" \
     NPM_CONFIG_CACHE="/opt/Agents/cache/npm" \
     NUGET_PACKAGES="/opt/Agents/cache/nuget" \
