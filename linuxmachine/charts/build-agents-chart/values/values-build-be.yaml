@@ -6,7 +6,7 @@ pool:
     minReplicas: 2
     maxReplicas: 4
     pollingInterval: 30
-    cooldownPeriod: 300
+    cooldownPeriod: 600
     targetPipelinesQueueLength: "1"
   image:
     repository: krossk.azurecr.io/azure-agent-linux
