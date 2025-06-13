@@ -166,7 +166,7 @@ kubectl create secret generic devextreme-key --from-literal=DEVEXTREME_KEY=<VYGE
 
 ## 5. Docker image príprava
 
-> **Poznámka:** Ak sa nemenilo nič v image pre Build Agentov, tak buildovať ani pushovať image na registry netreba. Vytvorenie secretu je však potrebné.
+Ak sa nemenilo nič v image pre Build Agentov, tak buildovať ani pushovať image na registry netreba. Vytvorenie secretu je však potrebné.
 
 ### Build docker image
 
