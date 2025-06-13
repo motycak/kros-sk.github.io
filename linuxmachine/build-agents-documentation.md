@@ -204,7 +204,7 @@ flowchart TD
 
 ### Škálovanie nadol (Scale Down)
 
-1. **Cooldown**: Po triggernutí scale up eventu sa čaká 300 sekúnd (dá sa prispôsobiť) kým začne kontrola pre škálovanie nadol
+1. **Cooldown**: Po triggernutí scale up eventu sa čaká 600 sekúnd (dá sa prispôsobiť) kým začne kontrola pre škálovanie nadol
 2. **Vyhodnotenie**: Ak nie sú čakajúce úlohy a počet replikácií je väčší ako minimum
 3. **Odstránenie**: KEDA zníži počet replikácií StatefulSet, t.j. odstráni pod
 
@@ -215,5 +215,5 @@ Pre každý pool sú definované nasledujúce parametre:
 - **minReplicas**: Minimálny počet replikácií (vždy aktívnych agentov)
 - **maxReplicas**: Maximálny počet replikácií
 - **pollingInterval**: Interval kontroly čakajúcich úloh (30s)
-- **cooldownPeriod**: Obdobie čakania pred znížením (300s)
+- **cooldownPeriod**: Obdobie čakania pred znížením (600s)
 - **targetPipelinesQueueLength**: Cieľový počet čakajúcich úloh pre škálovanie (1)
