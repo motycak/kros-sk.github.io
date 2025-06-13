@@ -1,0 +1,7 @@
+# Default values for shared-resources-chart
+# This chart contains shared resources used by build agents
+
+storage:
+  cache:
+    size: 100Gi
+    storageClass: local-path 

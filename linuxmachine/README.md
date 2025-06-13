@@ -219,20 +219,34 @@ Hodnoty sa dosadzujú cez values súbory v adresári [charts/build-agents-chart/
 ```bash
 mkdir /opt/Agents/agentCharts
 cd /opt/Agents/agentCharts
-helm create build-agents-chart  # vytvorenie defaultného chartu
 
-# Odstránenie nepotrebných súborov (použijeme vlastné)
+# Vytvorenie shared-resources chartu (zdieľané resources ako PVC)
+helm create shared-resources-chart
+rm -rf shared-resources-chart/templates
+rm -rf shared-resources-chart/values.yaml
+
+# Vytvorenie build-agents chartu
+helm create build-agents-chart
 rm -rf build-agents-chart/templates
 rm -rf build-agents-chart/values.yaml
 
-# Prekopírovanie chartu z repozitára
-cp [cesta_k_priečinku_s_chartom] /opt/Agents/agentCharts/
+# Prekopírovanie chartov z repozitára
+cp [cesta_k_priečinku_s_chartom]/shared-resources-chart/ /opt/Agents/agentCharts/
+cp [cesta_k_priečinku_s_chartom]/build-agents-chart/ /opt/Agents/agentCharts/
+# napr. cp ~/kros-sk.github.io/linuxmachine/charts/shared-resources-chart/ /opt/Agents/agentCharts/
 # napr. cp ~/kros-sk.github.io/linuxmachine/charts/build-agents-chart/ /opt/Agents/agentCharts/
 ```
 
 ### Nasadenie build agentov
 
-**Overenie manifestu:**
+**Najprv nasadíme zdieľané resources:**
+
+```bash
+# Nasadenie zdieľaných resources (PVC)
+helm install shared-resources /opt/Agents/agentCharts/shared-resources-chart --namespace build-agents
+```
+
+**Overenie manifestu pre build agentov:**
 
 ```bash
 helm install [pomenovanie_release] /opt/Agents/agentCharts/build-agents-chart \
@@ -243,7 +257,7 @@ helm install [pomenovanie_release] /opt/Agents/agentCharts/build-agents-chart \
 
 Vo výstupe môžeme skontrolovať či nám správne dosadilo hodnoty z values súboru.
 
-**Aplikovanie manifestu:**
+**Aplikovanie manifestu pre build agentov:**
 
 ```bash
 helm install [pomenovanie_release] /opt/Agents/agentCharts/build-agents-chart \
@@ -274,6 +288,8 @@ kubectl get configmap -n build-agents
 kubectl get scaledobject -n build-agents
 helm ls -n build-agents  # zobraziť všetky release cez Helm
 ```
+
+PVC "agent-cache-pvc" sa zobrazuje ako súčasť "shared-resources" release a je zdieľaný medzi všetkými build agent poolmi.
 
 Alternatívne môžeme použiť k9s. Dokumentácia: [k9s](https://k9scli.io/)
 

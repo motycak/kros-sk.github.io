@@ -7,5 +7,5 @@ spec:
     - ReadWriteOnce # k3s nepodporuje ReadWriteMany. ReadWriteOnce je dostatočné pre naše účely pretože obmedzuje len prístup z jedného node. Viaceré pody môžu stále pristupovať.
   resources:
     requests:
-      storage: 100Gi
-  storageClassName: local-path 
+      storage: {{ .Values.storage.cache.size }}
+  storageClassName: {{ .Values.storage.cache.storageClassName }}
