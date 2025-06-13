@@ -8,4 +8,4 @@ spec:
   resources:
     requests:
       storage: {{ .Values.storage.cache.size }}
-  storageClassName: {{ .Values.storage.cache.storageClassName }}
+  storageClassName: {{ .Values.storage.cache.storageClass }}
