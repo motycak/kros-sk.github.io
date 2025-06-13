@@ -1,4 +1,4 @@
-# Používateľská dokumentácia - Linux Build Machine
+# Princíp fungovania - Linux Build Machine
 
 ## Prehľad systému
 
