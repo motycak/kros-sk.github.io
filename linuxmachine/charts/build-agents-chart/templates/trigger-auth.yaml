@@ -1,7 +1,7 @@
 apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
 metadata:
-  name: azure-pipelines-trigger-auth
+  name: "{{ .Values.pool.agentNameBase }}-trigger-auth"
 spec:
   secretTargetRef:
     - parameter: personalAccessToken
