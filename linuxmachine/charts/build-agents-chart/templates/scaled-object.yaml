@@ -17,4 +17,4 @@ spec:
       organizationURLFromEnv: "AZP_URL"
       targetPipelinesQueueLength: {{ .Values.pool.scaler.targetPipelinesQueueLength | quote }}
     authenticationRef:
-      name: azure-pipelines-trigger-auth 
+      name: "{{ .Values.pool.agentNameBase }}-trigger-auth" 
