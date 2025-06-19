@@ -20,7 +20,8 @@ RUN apt update && \
         openssl \
         ca-certificates \
         locales \
-        tzdata && \
+        tzdata \
+        iputils-ping && \
     # Installing higher version of git (not officialy supported for ubuntu 22.04) because of troubles with dotnet affected
     add-apt-repository ppa:git-core/ppa && \
     apt update && \

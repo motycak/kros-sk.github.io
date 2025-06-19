@@ -8,16 +8,28 @@ ALFA_SHARE="NugetServer ALFAplus"
 
 echo "=== Testovanie sieťovej dostupnosti Alfa NuGet servera ==="
 
-# 1. Ping test
-echo "1. Ping test na $ALFA_SERVER:"
-if ping -c 3 "$ALFA_SERVER" > /dev/null 2>&1; then
-    echo "   ✅ Server $ALFA_SERVER je dostupný cez ping"
+# 1. DNS test
+echo "1. DNS test na $ALFA_SERVER:"
+if nslookup "$ALFA_SERVER" > /dev/null 2>&1; then
+    echo "   ✅ Server $ALFA_SERVER je dostupný cez DNS"
 else
-    echo "   ❌ Server $ALFA_SERVER nie je dostupný cez ping"
+    echo "   ❌ Server $ALFA_SERVER nie je dostupný cez DNS"
 fi
 
-# 2. Port test (SMB porty)
-echo "2. Test SMB portov na $ALFA_SERVER:"
+# 2. Ping test (ak je dostupný)
+echo "2. Ping test na $ALFA_SERVER:"
+if command -v ping > /dev/null 2>&1; then
+    if ping -c 3 "$ALFA_SERVER" > /dev/null 2>&1; then
+        echo "   ✅ Server $ALFA_SERVER je dostupný cez ping"
+    else
+        echo "   ❌ Server $ALFA_SERVER nie je dostupný cez ping"
+    fi
+else
+    echo "   ⚠️  ping nie je nainštalovaný"
+fi
+
+# 3. Port test (SMB porty)
+echo "3. Test SMB portov na $ALFA_SERVER:"
 SMB_PORTS=(139 445)
 for port in "${SMB_PORTS[@]}"; do
     if timeout 5 bash -c "</dev/tcp/$ALFA_SERVER/$port" 2>/dev/null; then
@@ -27,8 +39,8 @@ for port in "${SMB_PORTS[@]}"; do
     fi
 done
 
-# 3. SMB list test
-echo "3. Test SMB zoznamu shares:"
+# 4. SMB list test
+echo "4. Test SMB zoznamu shares:"
 if command -v smbclient > /dev/null 2>&1; then
     if timeout 10 smbclient -L "//$ALFA_SERVER" -U guest% 2>/dev/null | grep -q "$ALFA_SHARE"; then
         echo "   ✅ Share '$ALFA_SHARE' je dostupný"
@@ -39,8 +51,8 @@ else
     echo "   ⚠️  smbclient nie je nainštalovaný"
 fi
 
-# 4. Priamy mount test
-echo "4. Test priameho mountovania:"
+# 5. Priamy mount test
+echo "5. Test priameho mountovania:"
 TEST_MOUNT="/tmp/test-alfa-mount"
 if [ -d "$TEST_MOUNT" ]; then
     sudo umount "$TEST_MOUNT" 2>/dev/null || true
