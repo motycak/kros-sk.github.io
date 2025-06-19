@@ -45,7 +45,6 @@ log "Začínam inštaláciu a konfiguráciu logovania..."
 # =============================================================================
 log "Aktualizujem systém..."
 apt update
-apt upgrade -y
 
 # =============================================================================
 # 2. INŠTALÁCIA POTREBNÝCH BALÍKOV
