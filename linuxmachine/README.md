@@ -75,6 +75,15 @@ docker run -d -p 8000:8000 -p 9000:9000 --name portainer --restart=always \
 
 Prístup: `http://[ip_adresa]:9000`
 
+### ncdu (voliteľné)
+
+Nástroj pre prehľadné zobrazenie priestoru na disku.
+
+```bash
+sudo apt install ncdu
+ncdu /
+```
+
 ### Kubernetes CLI
 
 Na manažovanie kontajnerov využívame Kubernetes.
