@@ -233,8 +233,8 @@ rm -rf build-agents-chart/values.yaml
 # Prekopírovanie chartov z repozitára
 cp [cesta_k_priečinku_s_chartom]/shared-resources-chart/ /opt/Agents/agentCharts/
 cp [cesta_k_priečinku_s_chartom]/build-agents-chart/ /opt/Agents/agentCharts/
-# napr. cp ~/kros-sk.github.io/linuxmachine/charts/shared-resources-chart/ /opt/Agents/agentCharts/
-# napr. cp ~/kros-sk.github.io/linuxmachine/charts/build-agents-chart/ /opt/Agents/agentCharts/
+# napr. cp -r ~/kros-sk.github.io/linuxmachine/charts/shared-resources-chart/ /opt/Agents/agentCharts/
+# napr. cp -r ~/kros-sk.github.io/linuxmachine/charts/build-agents-chart/ /opt/Agents/agentCharts/
 ```
 
 ### Nasadenie build agentov
