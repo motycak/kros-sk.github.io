@@ -75,6 +75,15 @@ docker run -d -p 8000:8000 -p 9000:9000 --name portainer --restart=always \
 
 Prístup: `http://[ip_adresa]:9000`
 
+### ncdu (voliteľné)
+
+Nástroj pre prehľadné zobrazenie priestoru na disku.
+
+```bash
+sudo apt install ncdu
+ncdu /
+```
+
 ### Kubernetes CLI
 
 Na manažovanie kontajnerov využívame Kubernetes.
@@ -233,8 +242,8 @@ rm -rf build-agents-chart/values.yaml
 # Prekopírovanie chartov z repozitára
 cp [cesta_k_priečinku_s_chartom]/shared-resources-chart/ /opt/Agents/agentCharts/
 cp [cesta_k_priečinku_s_chartom]/build-agents-chart/ /opt/Agents/agentCharts/
-# napr. cp ~/kros-sk.github.io/linuxmachine/charts/shared-resources-chart/ /opt/Agents/agentCharts/
-# napr. cp ~/kros-sk.github.io/linuxmachine/charts/build-agents-chart/ /opt/Agents/agentCharts/
+# napr. cp -r ~/kros-sk.github.io/linuxmachine/charts/shared-resources-chart/ /opt/Agents/agentCharts/
+# napr. cp -r ~/kros-sk.github.io/linuxmachine/charts/build-agents-chart/ /opt/Agents/agentCharts/
 ```
 
 ### Nasadenie build agentov
