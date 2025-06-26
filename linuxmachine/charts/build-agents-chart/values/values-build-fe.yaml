@@ -4,10 +4,10 @@ pool:
   replicas: 2
   scaler:
     minReplicas: 2
-    maxReplicas: 3
+    maxReplicas: 4
     pollingInterval: 30
     cooldownPeriod: 3600
-    targetPipelinesQueueLength: "4"
+    targetPipelinesQueueLength: "3"
   image:
     repository: krossk.azurecr.io/azure-agent-linux
     tag: k8s
