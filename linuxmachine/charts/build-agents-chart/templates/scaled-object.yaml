@@ -10,6 +10,11 @@ spec:
   cooldownPeriod: {{ .Values.pool.scaler.cooldownPeriod }}
   minReplicaCount: {{ .Values.pool.scaler.minReplicas }}
   maxReplicaCount: {{ .Values.pool.scaler.maxReplicas }}
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: {{ .Values.pool.scaler.cooldownPeriod }}
   triggers:
   - type: azure-pipelines
     metadata:
