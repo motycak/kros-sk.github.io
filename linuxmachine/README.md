@@ -151,10 +151,10 @@ kubectl config set-context --current --namespace=build-agents
 
 ### Nainštalovanie KEDA
 
-Pomocou KEDA dokážeme automaticky škálovať počet agentov v závislosti na počte čakajúcich úloh v Azure DevOps.
+Pomocou KEDA dokážeme automaticky škálovať počet agentov v závislosti na počte jobov v pool-e.
 
 ```bash
-kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.17.0/keda-2.17.0-core.yaml
+kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.17.2/keda-2.17.2-core.yaml
 ```
 
 ---

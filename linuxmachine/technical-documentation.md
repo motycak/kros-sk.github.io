@@ -11,6 +11,12 @@ Pre cluster je použitá K3s, ktorá je odľahčená verzia Kubernetes.
 ### KEDA (Kubernetes Event-driven Autoscaling)
 
 KEDA poskytuje automatické škálovanie pre Kubernetes. My konkrétne používame škálovanie na základe počtu čakajúcich úloh v Azure DevOps.
+Pri fungovaní ale treba dávať pozor lebo nefunguje tak ako by človek očakával. Nedokáže overovať čakajúce úlohy v pool-e ale monitoruje aktuálny počet aktívnych jobov. Vo [values](./charts/build-agents-chart/values/) súboroch sa definuje `targetPipelinesQueueLength`, ktorá neurčuje pri koľkých čakajúcich joboch má škálovať ale hodnota sa využíva na výpočet metriky, podľa ktorej škáluje. `targetPipelinesQueueLength` môžeme chápať ako hodnotu, ktorá určuje koľko agentov dokáže bežať na jednu replikáciu. Keďže máme v pool-e aj Windows agentov, ktorých počet je statický(build1 a build5), tak nastavujeme na 3, pretože na jedného kontajnerizovaného agenta máme 2 ďalších statických agentov (podľa min hodnoty).
+Metrika overuje či je `current` vyšší ako `target`.
+`target` je `targetPipelinesQueueLength` hodnota.
+`current` sa počíta ako `počet aktívnych jobov / počet replikácií(podov s agentami)`
+
+Ak je metrika väčšia ako 1, tak škáluje nahor. Ak klesne pod 1, tak škáluje nadol.
 
 **Použité KEDA objekty:**
 
