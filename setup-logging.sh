@@ -242,7 +242,14 @@ echo "=== HARDWARE MONITORING - $DATE ===" >> "$HARDWARE_LOG"
 # CPU informácie
 echo "CPU Usage: $(top -bn1 | grep 'Cpu(s)' | awk '{print $2}' | cut -d'%' -f1)%" >> "$HARDWARE_LOG"
 echo "CPU Frequency: $(cat /proc/cpuinfo | grep 'cpu MHz' | head -1 | awk '{print $4}') MHz" >> "$HARDWARE_LOG"
-echo "CPU Temperature: $(sensors | grep 'Core' | head -1 | awk '{print $3}' 2>/dev/null || echo 'N/A')" >> "$HARDWARE_LOG"
+
+# CPU Temperature - pokus o rôzne formáty senzorov
+CPU_TEMP=$(sensors | grep -E '(Core|Tctl|temp1)' | head -1 | awk '{print $2}' | sed 's/[^0-9.]//g' 2>/dev/null)
+if [[ -n "$CPU_TEMP" ]]; then
+    echo "CPU Temperature: ${CPU_TEMP}°C" >> "$HARDWARE_LOG"
+else
+    echo "CPU Temperature: N/A" >> "$HARDWARE_LOG"
+fi
 
 # Memory informácie
 echo "Memory Total: $(free -m | awk 'NR==2{print $2}') MB" >> "$HARDWARE_LOG"
@@ -326,7 +333,7 @@ fi
 
 # Kontrola teploty
 if command -v sensors &> /dev/null; then
-    TEMP=$(sensors | grep 'Core' | head -1 | awk '{print $3}' | sed 's/[^0-9.]//g' 2>/dev/null)
+    TEMP=$(sensors | grep -E '(Core|Tctl|temp1)' | head -1 | awk '{print $2}' | sed 's/[^0-9.]//g' 2>/dev/null)
     if [[ -n "$TEMP" && $(echo "$TEMP > 85" | bc -l 2>/dev/null) -eq 1 ]]; then
         echo "$DATE: VYSOKÁ TEPLOTA: ${TEMP}°C" >> "$LOG_FILE"
     fi
@@ -711,7 +718,12 @@ echo "Memory: $(free -m | awk 'NR==2{printf "%.2f%%", $3*100/$2}')"
 echo "Disk: $(df -h / | awk 'NR==2{print $5}')"
 
 if command -v sensors &> /dev/null; then
-    echo "Temperature: $(sensors | grep 'Core' | head -1 | awk '{print $3}' 2>/dev/null || echo 'N/A')"
+    TEMP=$(sensors | grep -E '(Core|Tctl|temp1)' | head -1 | awk '{print $2}' | sed 's/[^0-9.]//g' 2>/dev/null)
+    if [[ -n "$TEMP" ]]; then
+        echo "Temperature: ${TEMP}°C"
+    else
+        echo "Temperature: N/A"
+    fi
 fi
 
 log "Inštalácia je dokončená. Logy sa budú automaticky zbierať." 
