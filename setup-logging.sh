@@ -607,6 +607,16 @@ else
     echo "Health check log neexistuje" >> "$ANALYSIS_FILE"
 fi
 
+# Analýza kernel logov
+echo "=== KERNEL ANALÝZA ===" >> "$ANALYSIS_FILE"
+if [[ -f "/opt/monitoring/kernel/kernel.log" ]]; then
+    echo "Posledných 50 kernel správ:" >> "$ANALYSIS_FILE"
+    tail -50 "/opt/monitoring/kernel/kernel.log" >> "$ANALYSIS_FILE"
+else
+    echo "Kernel log neexistuje" >> "$ANALYSIS_FILE"
+fi
+echo "" >> "$ANALYSIS_FILE"
+
 echo "Analýza dokončená: $ANALYSIS_FILE"
 EOF
 
@@ -705,6 +715,8 @@ sudo cat /etc/apparmor.d/local/usr.sbin.rsyslogd
 
 4. **Skontrolujte kernel logy:**
    ```bash
+   sudo tail -100 /opt/monitoring/kernel/kernel.log
+   # Pre porovnanie s systémovými logmi:
    sudo dmesg | tail -50
    sudo journalctl -k | tail -50
    ```
