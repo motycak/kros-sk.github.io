@@ -446,7 +446,7 @@ if command -v kubectl &> /dev/null; then
             echo "$DATE: KUBERNETES NEODPOVEDÁ" >> "$LOG_FILE"
         fi
     else
-        echo "$DATE: KUBERNETES: N/A" >> "$LOG_FILE"
+        echo "$DATE: KUBERNETES: cluster-info not available" >> "$LOG_FILE"
     fi
 else
     echo "$DATE: KUBERNETES: unknown" >> "$LOG_FILE"
