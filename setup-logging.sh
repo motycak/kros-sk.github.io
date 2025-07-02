@@ -366,8 +366,7 @@ if command -v smartctl &> /dev/null; then
         echo "--- SMART ROZŠÍRENÉ INFORMÁCIE DOKONČENÉ ---" >> "$HARDWARE_LOG"
     else
         # Ak SMART prejde, zbierame len základné informácie
-        echo "SMART Status: $SMART_STATUS - OK" >> "$HARDWARE_LOG"
-        
+                
         # Základné informácie o disku
         echo "Disk Model: $(smartctl -i /dev/sda 2>/dev/null | grep 'Device Model' | awk -F': ' '{print $2}' || echo 'N/A')" >> "$HARDWARE_LOG"
         echo "Serial Number: $(smartctl -i /dev/sda 2>/dev/null | grep 'Serial Number' | awk -F': ' '{print $2}' || echo 'N/A')" >> "$HARDWARE_LOG"
