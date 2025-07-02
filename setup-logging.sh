@@ -321,7 +321,65 @@ echo "Disk Available: $(df -h / | awk 'NR==2{print $4}')" >> "$HARDWARE_LOG"
 
 # SMART informácie (ak je dostupné)
 if command -v smartctl &> /dev/null; then
-    echo "SMART Status: $(smartctl -H /dev/sda 2>/dev/null | grep 'SMART overall-health' | awk '{print $6}' || echo 'N/A')" >> "$HARDWARE_LOG"
+    echo "=== SMART DISK MONITORING ===" >> "$HARDWARE_LOG"
+    
+    # Základný SMART status
+    SMART_STATUS=$(smartctl -H /dev/sda 2>/dev/null | grep 'SMART overall-health' | awk '{print $6}' || echo 'N/A')
+    echo "SMART Status: $SMART_STATUS" >> "$HARDWARE_LOG"
+    
+    # Ak SMART neprejde, zbierame rozšírené informácie
+    if [[ "$SMART_STATUS" != "PASSED" && "$SMART_STATUS" != "N/A" ]]; then
+        echo "SMART TEST NEPREŠIEL - zbieram rozšírené informácie..." >> "$HARDWARE_LOG"
+        
+        # Detailné SMART atribúty
+        echo "--- SMART ATTRIBUTES ---" >> "$HARDWARE_LOG"
+        smartctl -A /dev/sda 2>/dev/null >> "$HARDWARE_LOG" || echo "Nepodarilo sa získať SMART atribúty" >> "$HARDWARE_LOG"
+        
+        # SMART error log
+        echo "--- SMART ERROR LOG ---" >> "$HARDWARE_LOG"
+        smartctl -l error /dev/sda 2>/dev/null >> "$HARDWARE_LOG" || echo "Nepodarilo sa získať SMART error log" >> "$HARDWARE_LOG"
+        
+        # SMART self-test log
+        echo "--- SMART SELF-TEST LOG ---" >> "$HARDWARE_LOG"
+        smartctl -l selftest /dev/sda 2>/dev/null >> "$HARDWARE_LOG" || echo "Nepodarilo sa získať SMART self-test log" >> "$HARDWARE_LOG"
+        
+        # SMART select log
+        echo "--- SMART SELECT LOG ---" >> "$HARDWARE_LOG"
+        smartctl -l select /dev/sda 2>/dev/null >> "$HARDWARE_LOG" || echo "Nepodarilo sa získať SMART select log" >> "$HARDWARE_LOG"
+        
+        # Informácie o disku
+        echo "--- DISK INFORMATION ---" >> "$HARDWARE_LOG"
+        smartctl -i /dev/sda 2>/dev/null >> "$HARDWARE_LOG" || echo "Nepodarilo sa získať informácie o disku" >> "$HARDWARE_LOG"
+        
+        # Power-on hours a cykly
+        echo "--- POWER-ON HOURS ---" >> "$HARDWARE_LOG"
+        smartctl -A /dev/sda 2>/dev/null | grep -E "(Power_On_Hours|Power_Cycle_Count|Start_Stop_Count)" >> "$HARDWARE_LOG" || echo "Nepodarilo sa získať power-on informácie" >> "$HARDWARE_LOG"
+        
+        # Kritické atribúty (Reallocated Sectors, Current Pending Sectors, Uncorrectable Sectors)
+        echo "--- KRITICKÉ ATRIBÚTY ---" >> "$HARDWARE_LOG"
+        smartctl -A /dev/sda 2>/dev/null | grep -E "(Reallocated_Sector_Ct|Current_Pending_Sector|Offline_Uncorrectable|UDMA_CRC_Error_Count)" >> "$HARDWARE_LOG" || echo "Nepodarilo sa získať kritické atribúty" >> "$HARDWARE_LOG"
+        
+        # Teplota disku
+        echo "--- DISK TEMPERATURE ---" >> "$HARDWARE_LOG"
+        smartctl -A /dev/sda 2>/dev/null | grep -i temperature >> "$HARDWARE_LOG" || echo "Nepodarilo sa získať teplotu disku" >> "$HARDWARE_LOG"
+        
+        echo "--- SMART ROZŠÍRENÉ INFORMÁCIE DOKONČENÉ ---" >> "$HARDWARE_LOG"
+    else
+        # Ak SMART prejde, zbierame len základné informácie
+        echo "SMART Status: $SMART_STATUS - OK" >> "$HARDWARE_LOG"
+        
+        # Základné informácie o disku
+        echo "Disk Model: $(smartctl -i /dev/sda 2>/dev/null | grep 'Device Model' | awk -F': ' '{print $2}' || echo 'N/A')" >> "$HARDWARE_LOG"
+        echo "Serial Number: $(smartctl -i /dev/sda 2>/dev/null | grep 'Serial Number' | awk -F': ' '{print $2}' || echo 'N/A')" >> "$HARDWARE_LOG"
+        
+        # Power-on hours
+        POWER_ON_HOURS=$(smartctl -A /dev/sda 2>/dev/null | grep 'Power_On_Hours' | awk '{print $10}' || echo 'N/A')
+        echo "Power-On Hours: $POWER_ON_HOURS" >> "$HARDWARE_LOG"
+        
+        # Teplota disku
+        DISK_TEMP=$(smartctl -A /dev/sda 2>/dev/null | grep -i temperature | awk '{print $10}' || echo 'N/A')
+        echo "Disk Temperature: ${DISK_TEMP}°C" >> "$HARDWARE_LOG"
+    fi
 fi
 
 # Teplota (ak je dostupná)
