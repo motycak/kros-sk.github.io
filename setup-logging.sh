@@ -43,8 +43,8 @@ log "Začínam inštaláciu a konfiguráciu logovania..."
 # =============================================================================
 # 1. AKTUALIZÁCIA SYSTÉMU
 # =============================================================================
-log "Aktualizujem systém..."
-apt update
+# log "Aktualizujem systém..."
+# apt update
 
 # =============================================================================
 # 2. INŠTALÁCIA POTREBNÝCH BALÍKOV
