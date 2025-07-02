@@ -43,8 +43,8 @@ log "Začínam inštaláciu a konfiguráciu logovania..."
 # =============================================================================
 # 1. AKTUALIZÁCIA SYSTÉMU
 # =============================================================================
-# log "Aktualizujem systém..."
-# apt update
+log "Aktualizujem systém..."
+apt update
 
 # =============================================================================
 # 2. INŠTALÁCIA POTREBNÝCH BALÍKOV
@@ -464,11 +464,13 @@ log "Nastavujem cron joby..."
 
 # Vytvorenie crontab súboru
 cat > /tmp/monitoring-cron << 'EOF'
+KUBECONFIG=/home/kostelej/.kube/config
+
 # System monitoring každé 2 minúty
-*/2 * * * * KUBECONFIG=~/.kube/config /opt/monitoring/scripts/system-monitor.sh
+*/2 * * * * /opt/monitoring/scripts/system-monitor.sh
 
 # Health check každú minútu
-* * * * * KUBECONFIG=~/.kube/config /opt/monitoring/scripts/health-check.sh
+* * * * * /opt/monitoring/scripts/health-check.sh
 
 # Denné zálohovanie logov
 0 2 * * * find /opt/monitoring -name "*.log" -mtime +7 -exec gzip {} \;
