@@ -353,15 +353,31 @@ fi
 
 # Kontrola Docker (ak je dostupný)
 if command -v docker &> /dev/null; then
-    if ! docker ps &> /dev/null; then
-        echo "$DATE: DOCKER NEODPOVEDÁ" >> "$LOG_FILE"
+    # Skontrolujte či je Docker daemon spustený
+    if docker info &> /dev/null 2>&1; then
+        # Test rôznych docker príkazov
+        if ! docker ps &> /dev/null 2>&1 && ! docker version &> /dev/null 2>&1 && ! docker system info &> /dev/null 2>&1; then
+            echo "$DATE: DOCKER NEODPOVEDÁ" >> "$LOG_FILE"
+        fi
+    else
+        # Docker nie je spustený
+        # Nezapisujeme chybu, pretože to nie je problém
+        :
     fi
 fi
 
 # Kontrola Kubernetes (ak je dostupný)
 if command -v kubectl &> /dev/null; then
-    if ! kubectl get nodes &> /dev/null; then
-        echo "$DATE: KUBERNETES NEODPOVEDÁ" >> "$LOG_FILE"
+    # Skontrolujte či je Kubernetes cluster dostupný
+    if kubectl cluster-info &> /dev/null 2>&1; then
+        # Test rôznych kubectl príkazov
+        if ! kubectl get nodes &> /dev/null 2>&1 && ! kubectl get pods --all-namespaces &> /dev/null 2>&1 && ! kubectl version --client &> /dev/null 2>&1; then
+            echo "$DATE: KUBERNETES NEODPOVEDÁ" >> "$LOG_FILE"
+        fi
+    else
+        # Kubernetes nie je spustený alebo nie je nakonfigurovaný
+        # Nezapisujeme chybu, pretože to nie je problém
+        :
     fi
 fi
 EOF
