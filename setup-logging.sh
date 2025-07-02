@@ -336,7 +336,7 @@ fi
 echo "=== PERFORMANCE MONITORING - $DATE ===" >> "$PERFORMANCE_LOG"
 
 # Load average
-echo "Load Average: $(uptime | awk -F'load average:' '{print $2}')" >> "$PERFORMANCE_LOG"
+echo "Load Average (1, 5, 15 min): $(uptime | awk -F'load average:' '{print $2}')" >> "$PERFORMANCE_LOG"
 
 # Počet procesov
 echo "Process Count: $(ps aux | wc -l)" >> "$PERFORMANCE_LOG"
@@ -346,12 +346,12 @@ echo "Network Connections: $(netstat -an | wc -l)" >> "$PERFORMANCE_LOG"
 
 # Docker kontajnery (ak je Docker dostupný)
 if command -v docker &> /dev/null; then
-    echo "Docker Containers: $(docker ps --format 'table {{.Names}}\t{{.Status}}' 2>/dev/null | wc -l)" >> "$PERFORMANCE_LOG"
+    echo "Docker Containers: $(( $(docker ps --format 'table {{.Names}}\t{{.Status}}' 2>/dev/null | wc -l) - 1 ))" >> "$PERFORMANCE_LOG"
 fi
 
 # Kubernetes pods (ak je kubectl dostupný)
 if command -v kubectl &> /dev/null; then
-    echo "Kubernetes Pods: $(kubectl get pods --all-namespaces 2>/dev/null | wc -l)" >> "$PERFORMANCE_LOG"
+    echo "Kubernetes Pods: $(kubectl get pods --all-namespaces --no-headers 2>/dev/null | wc -l)" >> "$PERFORMANCE_LOG"
 fi
 
 # I/O štatistiky
