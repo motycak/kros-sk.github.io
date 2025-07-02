@@ -449,7 +449,7 @@ if command -v kubectl &> /dev/null; then
         echo "$DATE: KUBERNETES: N/A" >> "$LOG_FILE"
     fi
 else
-    echo "$DATE: KUBERNETES: N/A" >> "$LOG_FILE"
+    echo "$DATE: KUBERNETES: unknown" >> "$LOG_FILE"
 fi
 
 echo "$DATE: HEALTH CHECK DOKONČENÝ" >> "$LOG_FILE"
