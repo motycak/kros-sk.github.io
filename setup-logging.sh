@@ -346,7 +346,7 @@ echo "Network Connections: $(netstat -an | wc -l)" >> "$PERFORMANCE_LOG"
 
 # Docker kontajnery (ak je Docker dostupný)
 if command -v docker &> /dev/null; then
-    echo "Docker Containers: $(( $(docker ps --format 'table {{.Names}}\t{{.Status}}' 2>/dev/null | wc -l) - 1 ))" >> "$PERFORMANCE_LOG"
+    echo "Docker Containers: $(( $(docker ps 2>/dev/null | wc -l) - 1 ))" >> "$PERFORMANCE_LOG"
 fi
 
 # Kubernetes pods (ak je kubectl dostupný)
