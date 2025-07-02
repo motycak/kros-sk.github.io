@@ -193,7 +193,46 @@ KDUMP_SCRIPT_POST_CLEAN=""
 EOF
 
 # =============================================================================
-# 6. KONFIGURÁCIA RSYSLOG
+# 6. KONFIGURÁCIA APPARMOR PRE RSYSLOG
+# =============================================================================
+log "Konfigurujem AppArmor pre rsyslog..."
+
+# Vytvorte AppArmor lokálny konfiguračný súbor
+cat > /etc/apparmor.d/local/usr.sbin.rsyslogd << 'EOF'
+# =============================================================================
+# APPARMOR KONFIGURÁCIA PRE RSYSLOG MONITORING
+# =============================================================================
+
+# Povolenie zapisovať do monitoring adresárov
+/opt/monitoring/logs/ rw,
+/opt/monitoring/logs/*.log rw,
+/opt/monitoring/kernel/ rw,
+/opt/monitoring/kernel/*.log rw,
+/opt/monitoring/hardware/ rw,
+/opt/monitoring/hardware/*.log rw,
+/opt/monitoring/performance/ rw,
+/opt/monitoring/performance/*.log rw,
+/opt/monitoring/crashes/ rw,
+/opt/monitoring/crashes/* rw,
+
+# Povolenie vytvárať nové súbory
+/opt/monitoring/logs/*.log* rw,
+/opt/monitoring/kernel/*.log* rw,
+/opt/monitoring/hardware/*.log* rw,
+/opt/monitoring/performance/*.log* rw,
+/opt/monitoring/crashes/* rw,
+EOF
+
+# Reštart AppArmor (ak existuje)
+if systemctl list-unit-files | grep -q apparmor; then
+    log "Reštartujem AppArmor..."
+    systemctl reload apparmor
+else
+    warning "AppArmor nie je nainštalovaný - preskočím konfiguráciu"
+fi
+
+# =============================================================================
+# 7. KONFIGURÁCIA RSYSLOG
 # =============================================================================
 log "Konfigurujem rsyslog..."
 
@@ -232,7 +271,7 @@ kern.* /opt/monitoring/kernel/kernel.log
 EOF
 
 # =============================================================================
-# 7. VYTVORENIE MONITORING SKRIPTU
+# 8. VYTVORENIE MONITORING SKRIPTU
 # =============================================================================
 log "Vytváram monitoring skript..."
 
@@ -330,7 +369,7 @@ EOF
 chmod +x /opt/monitoring/scripts/system-monitor.sh
 
 # =============================================================================
-# 8. VYTVORENIE HEALTH CHECK SKRIPTU
+# 9. VYTVORENIE HEALTH CHECK SKRIPTU
 # =============================================================================
 log "Vytváram health check skript..."
 
@@ -404,7 +443,7 @@ EOF
 chmod +x /opt/monitoring/scripts/health-check.sh
 
 # =============================================================================
-# 9. KONFIGURÁCIA CRON JOBOV
+# 10. KONFIGURÁCIA CRON JOBOV
 # =============================================================================
 log "Nastavujem cron joby..."
 
@@ -428,7 +467,7 @@ crontab /tmp/monitoring-cron
 rm /tmp/monitoring-cron
 
 # =============================================================================
-# 10. KONFIGURÁCIA LOGROTATE
+# 11. KONFIGURÁCIA LOGROTATE
 # =============================================================================
 log "Konfigurujem logrotate..."
 
@@ -478,7 +517,7 @@ cat > /etc/logrotate.d/monitoring << 'EOF'
 EOF
 
 # =============================================================================
-# 11. VYTVORENIE ANALÝZNEHO SKRIPTU
+# 12. VYTVORENIE ANALÝZNEHO SKRIPTU
 # =============================================================================
 log "Vytváram analytický skript..."
 
@@ -559,7 +598,7 @@ EOF
 chmod +x /opt/monitoring/scripts/analyze-logs.sh
 
 # =============================================================================
-# 12. RESTART SLUŽIEB
+# 13. RESTART SLUŽIEB
 # =============================================================================
 log "Reštartujem služby..."
 
@@ -568,7 +607,7 @@ systemctl enable kdump-tools
 systemctl start kdump-tools
 
 # =============================================================================
-# 13. VYTVORENIE README SÚBORU
+# 14. VYTVORENIE README SÚBORU
 # =============================================================================
 log "Vytváram dokumentáciu..."
 
@@ -580,6 +619,20 @@ cat > /opt/monitoring/README.md << 'EOF'
 Tento systém bol nastavený pre diagnostiku problému s vytuhnutím mašiny.
 Keďže sa problém opakuje na rôznych OS (Windows aj Linux), je to pravdepodobne
 hardvérový problém.
+
+## AppArmor konfigurácia
+
+Skript automaticky nakonfiguruje AppArmor pre rsyslog, aby mal povolenie
+zapisovať do `/opt/monitoring/` adresárov. Ak máte problémy s logovaním,
+skontrolujte AppArmor konfiguráciu:
+
+```bash
+# Skontrolujte AppArmor status
+sudo aa-status
+
+# Skontrolujte rsyslog AppArmor profil
+sudo cat /etc/apparmor.d/local/usr.sbin.rsyslogd
+```
 
 ## Čo sa loguje?
 
@@ -690,7 +743,7 @@ Pri problémoch kontaktujte systémového administrátora.
 EOF
 
 # =============================================================================
-# 14. FINÁLNE TESTOVANIE
+# 15. FINÁLNE TESTOVANIE
 # =============================================================================
 log "Testujem nastavenia..."
 
@@ -716,7 +769,7 @@ else
 fi
 
 # =============================================================================
-# 15. ZÁVEREČNÉ INFORMÁCIE
+# 16. ZÁVEREČNÉ INFORMÁCIE
 # =============================================================================
 log "Inštalácia dokončená úspešne!"
 
