@@ -383,61 +383,76 @@ cat > /opt/monitoring/scripts/health-check.sh << 'EOF'
 LOG_FILE="/opt/monitoring/logs/health-check.log"
 DATE=$(date '+%Y-%m-%d %H:%M:%S')
 
+# Debug informácia - vždy zapíšeme že sa skript spustil
+echo "$DATE: HEALTH CHECK SPUSTENÝ" >> "$LOG_FILE"
+
 # Kontrola či systém reaguje
 if ! ping -c 1 127.0.0.1 &> /dev/null; then
     echo "$DATE: SYSTEM NEODPOVEDÁ - kritický problém!" >> "$LOG_FILE"
-    # Tu môžete pridať automatický reštart alebo notifikáciu
+else
+    echo "$DATE: SYSTEM OK" >> "$LOG_FILE"
 fi
 
 # Kontrola teploty
 if command -v sensors &> /dev/null; then
     TEMP=$(sensors | grep -E '(Core|Tctl|temp1)' | head -1 | awk '{print $2}' | sed 's/[^0-9.]//g' 2>/dev/null)
-    if [[ -n "$TEMP" && $(echo "$TEMP > 85" | bc -l 2>/dev/null) -eq 1 ]]; then
-        echo "$DATE: VYSOKÁ TEPLOTA: ${TEMP}°C" >> "$LOG_FILE"
+    if [[ -n "$TEMP" ]]; then
+        echo "$DATE: CPU TEPLOTA: ${TEMP}°C" >> "$LOG_FILE"
+        if [[ $(echo "$TEMP > 85" | bc -l 2>/dev/null) -eq 1 ]]; then
+            echo "$DATE: VYSOKÁ TEPLOTA: ${TEMP}°C" >> "$LOG_FILE"
+        fi
+    else
+        echo "$DATE: TEPLOTA: N/A" >> "$LOG_FILE"
     fi
+else
+    echo "$DATE: SENSORS: N/A" >> "$LOG_FILE"
 fi
 
 # Kontrola dostupnej pamäte
 MEM_USAGE=$(free -m | awk 'NR==2{printf "%.0f", $3*100/$2}')
+echo "$DATE: PAMÄŤ: ${MEM_USAGE}%" >> "$LOG_FILE"
 if [[ $MEM_USAGE -gt 90 ]]; then
     echo "$DATE: VYSOKÉ VYUŽITIE PAMÄTE: ${MEM_USAGE}%" >> "$LOG_FILE"
 fi
 
 # Kontrola disku
 DISK_USAGE=$(df / | awk 'NR==2{print $5}' | sed 's/%//')
+echo "$DATE: DISK: ${DISK_USAGE}%" >> "$LOG_FILE"
 if [[ $DISK_USAGE -gt 90 ]]; then
     echo "$DATE: VYSOKÉ VYUŽITIE DISKU: ${DISK_USAGE}%" >> "$LOG_FILE"
 fi
 
 # Kontrola Docker (ak je dostupný)
 if command -v docker &> /dev/null; then
-    # Skontrolujte či je Docker daemon spustený
     if docker info &> /dev/null 2>&1; then
-        # Test rôznych docker príkazov
-        if ! docker ps &> /dev/null 2>&1 && ! docker version &> /dev/null 2>&1 && ! docker system info &> /dev/null 2>&1; then
+        if docker ps &> /dev/null 2>&1 || docker version &> /dev/null 2>&1 || docker system info &> /dev/null 2>&1; then
+            echo "$DATE: DOCKER: OK" >> "$LOG_FILE"
+        else
             echo "$DATE: DOCKER NEODPOVEDÁ" >> "$LOG_FILE"
         fi
     else
-        # Docker nie je spustený
-        # Nezapisujeme chybu, pretože to nie je problém
-        :
+        echo "$DATE: DOCKER: N/A" >> "$LOG_FILE"
     fi
+else
+    echo "$DATE: DOCKER: N/A" >> "$LOG_FILE"
 fi
 
 # Kontrola Kubernetes (ak je dostupný)
 if command -v kubectl &> /dev/null; then
-    # Skontrolujte či je Kubernetes cluster dostupný
     if kubectl cluster-info &> /dev/null 2>&1; then
-        # Test rôznych kubectl príkazov
-        if ! kubectl get nodes &> /dev/null 2>&1 && ! kubectl get pods --all-namespaces &> /dev/null 2>&1 && ! kubectl version --client &> /dev/null 2>&1; then
+        if kubectl get nodes &> /dev/null 2>&1 || kubectl get pods --all-namespaces &> /dev/null 2>&1 || kubectl version --client &> /dev/null 2>&1; then
+            echo "$DATE: KUBERNETES: OK" >> "$LOG_FILE"
+        else
             echo "$DATE: KUBERNETES NEODPOVEDÁ" >> "$LOG_FILE"
         fi
     else
-        # Kubernetes nie je spustený alebo nie je nakonfigurovaný
-        # Nezapisujeme chybu, pretože to nie je problém
-        :
+        echo "$DATE: KUBERNETES: N/A" >> "$LOG_FILE"
     fi
+else
+    echo "$DATE: KUBERNETES: N/A" >> "$LOG_FILE"
 fi
+
+echo "$DATE: HEALTH CHECK DOKONČENÝ" >> "$LOG_FILE"
 EOF
 
 chmod +x /opt/monitoring/scripts/health-check.sh
