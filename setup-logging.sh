@@ -93,7 +93,8 @@ mkdir -p /opt/monitoring/crashes
 mkdir -p /opt/monitoring/kernel
 mkdir -p /opt/monitoring/scripts
 
-# Nastavenie práv
+# Nastavenie práv pre rsyslog kompatibilitu
+chown -R syslog:adm /opt/monitoring
 chmod 755 /opt/monitoring
 chmod 755 /opt/monitoring/logs
 chmod 755 /opt/monitoring/hardware
@@ -101,6 +102,22 @@ chmod 755 /opt/monitoring/performance
 chmod 755 /opt/monitoring/crashes
 chmod 755 /opt/monitoring/kernel
 chmod 755 /opt/monitoring/scripts
+
+# Vytvorte log súbory s správnymi právami
+touch /opt/monitoring/logs/all.log
+touch /opt/monitoring/logs/critical.log
+touch /opt/monitoring/logs/errors.log
+touch /opt/monitoring/logs/warnings.log
+touch /opt/monitoring/logs/docker.log
+touch /opt/monitoring/logs/kubernetes.log
+touch /opt/monitoring/logs/ssh.log
+touch /opt/monitoring/kernel/kernel.log
+
+# Nastavte práva na log súbory
+chown syslog:adm /opt/monitoring/logs/*.log
+chown syslog:adm /opt/monitoring/kernel/*.log
+chmod 640 /opt/monitoring/logs/*.log
+chmod 640 /opt/monitoring/kernel/*.log
 
 # =============================================================================
 # 4. KONFIGURÁCIA SENSORS
@@ -180,8 +197,10 @@ EOF
 # =============================================================================
 log "Konfigurujem rsyslog..."
 
-cat >> /etc/rsyslog.conf << 'EOF'
+# Vytvorte samostatný konfiguračný súbor
+log "Vytváram rsyslog konfiguračný súbor..."
 
+cat > /etc/rsyslog.d/99-monitoring.conf << 'EOF'
 # =============================================================================
 # CUSTOM LOGGING CONFIGURATION
 # =============================================================================
