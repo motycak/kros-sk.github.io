@@ -640,7 +640,7 @@ echo "" >> "$ANALYSIS_FILE"
 # Analýza hardware logov
 echo "=== HARDWARE ANALÝZA ===" >> "$ANALYSIS_FILE"
 if [[ -f "$HARDWARE_LOG" ]]; then
-    echo "Posledných 20 záznamov:" >> "$ANALYSIS_FILE"
+    echo "Posledných 50 záznamov:" >> "$ANALYSIS_FILE"
     tail -20 "$HARDWARE_LOG" >> "$ANALYSIS_FILE"
 else
     echo "Hardware log neexistuje" >> "$ANALYSIS_FILE"
@@ -650,7 +650,7 @@ echo "" >> "$ANALYSIS_FILE"
 # Analýza performance logov
 echo "=== PERFORMANCE ANALÝZA ===" >> "$ANALYSIS_FILE"
 if [[ -f "$PERFORMANCE_LOG" ]]; then
-    echo "Posledných 20 záznamov:" >> "$ANALYSIS_FILE"
+    echo "Posledných 50 záznamov:" >> "$ANALYSIS_FILE"
     tail -20 "$PERFORMANCE_LOG" >> "$ANALYSIS_FILE"
 else
     echo "Performance log neexistuje" >> "$ANALYSIS_FILE"
