@@ -96,6 +96,9 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 RUN wget -qO- https://aka.ms/install-artifacts-credprovider.sh | bash && \
     sh -c "$(curl -fsSL https://aka.ms/install-artifacts-credprovider.sh)"
 
+# Creating user for Azure agent
+RUN useradd -m -d /home/azure-agent azure-agent
+
 # Creating cache directories and setting environment variables
 WORKDIR /opt/Agents
 ENV CYPRESS_CACHE_FOLDER="/opt/Agents/cache/cypress" \
@@ -109,9 +112,17 @@ RUN mkdir -p /opt/Agents/tools && \
     dotnet tool install Kros.DummyData.Initializer --tool-path /opt/Agents/tools && \
     dotnet tool install Kros.VariableSubstitution --tool-path /opt/Agents/tools && \
     npm install -g newman
+
+# Changing ownership of files to azure-agent user
+RUN chown -R azure-agent:azure-agent /opt/Agents && \
+    chown -R azure-agent:azure-agent /usr/lib/dotnet && \
+    chown -R azure-agent:azure-agent /home/azure-agent
 ENV PATH="$PATH:/opt/Agents/tools"
 
 COPY start-k8s.sh .
-RUN chmod +x start-k8s.sh
+RUN chmod +x start-k8s.sh && \
+    chown azure-agent:azure-agent start-k8s.sh
+
+USER azure-agent
 
 ENTRYPOINT ["./start-k8s.sh"] 
