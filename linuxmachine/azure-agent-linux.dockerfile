@@ -111,7 +111,7 @@ RUN mkdir -p /opt/Agents/tools && \
     dotnet tool install dotnet-affected --tool-path /opt/Agents/tools && \
     dotnet tool install Kros.DummyData.Initializer --tool-path /opt/Agents/tools && \
     dotnet tool install Kros.VariableSubstitution --tool-path /opt/Agents/tools && \
-    npm install -g newman && \
+    npm install -g newman
 
 # Setting ownership of files to azure-agent user
 RUN chown -R azure-agent:azure-agent /opt/Agents && \
