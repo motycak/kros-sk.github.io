@@ -20,7 +20,7 @@ print_header() {
 }
 
 # Let the agent ignore the token env variables
-export VSO_AGENT_IGNORE="AZP_TOKEN"
+export VSO_AGENT_IGNORE="AZURE_PAT_TOKEN"
 
 # Odstránenie existujúcej konfigurácie (ak existuje)
 if [ -f "./config.sh" ]; then
