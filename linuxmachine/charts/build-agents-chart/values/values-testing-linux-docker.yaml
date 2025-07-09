@@ -10,4 +10,4 @@ pool:
     targetPipelinesQueueLength: "1"
   image:
     repository: krossk.azurecr.io/azure-agent-linux
-    tag: k8sTesting
+    tag: k8s
