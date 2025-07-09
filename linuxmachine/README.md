@@ -312,6 +312,12 @@ helm upgrade [pomenovanie_release] /opt/Agents/agentCharts/build-agents-chart \
   --namespace build-agents
 ```
 
+Pokiaľ sa nezmenilo nič v manifestoch ale len docker image, tak po upgrade treba reštartnuť pody v konkrétnom StatefulSet, inak nebude vedieť že je dostupný novší image.
+
+```bash
+kubectl rollout restart statefulset/[pomenovanie_statefulset] --namespace build-agents
+```
+
 ### Rollback zmien
 
 Ak sa po úpravach niečo pokazilo a chceme sa vrátiť k pôvodnému stavu, tak môžeme použiť `helm rollback`.
