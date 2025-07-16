@@ -472,6 +472,13 @@ if [[ $MEM_USAGE -gt 90 ]]; then
     echo "$DATE: VYSOKÉ VYUŽITIE PAMÄTE: ${MEM_USAGE}%" >> "$LOG_FILE"
 fi
 
+# Kontrola CPU
+CPU_USAGE=$(top -bn1 | grep 'Cpu(s)' | awk '{print $2}' | cut -d'%' -f1)
+echo "$DATE: CPU: ${CPU_USAGE}%" >> "$LOG_FILE"
+if [[ $CPU_USAGE -gt 90 ]]; then
+    echo "$DATE: VYSOKÉ VYUŽITIE CPU: ${CPU_USAGE}%" >> "$LOG_FILE"
+fi
+
 # Kontrola disku
 DISK_USAGE=$(df / | awk 'NR==2{print $5}' | sed 's/%//')
 echo "$DATE: DISK: ${DISK_USAGE}%" >> "$LOG_FILE"
