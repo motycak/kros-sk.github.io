@@ -641,7 +641,7 @@ echo "" >> "$ANALYSIS_FILE"
 echo "=== HARDWARE ANALÝZA ===" >> "$ANALYSIS_FILE"
 if [[ -f "$HARDWARE_LOG" ]]; then
     echo "Posledných 60 záznamov:" >> "$ANALYSIS_FILE"
-    tail -20 "$HARDWARE_LOG" >> "$ANALYSIS_FILE"
+    tail -60 "$HARDWARE_LOG" >> "$ANALYSIS_FILE"
 else
     echo "Hardware log neexistuje" >> "$ANALYSIS_FILE"
 fi
@@ -650,8 +650,8 @@ echo "" >> "$ANALYSIS_FILE"
 # Analýza performance logov
 echo "=== PERFORMANCE ANALÝZA ===" >> "$ANALYSIS_FILE"
 if [[ -f "$PERFORMANCE_LOG" ]]; then
-    echo "Posledných 50 záznamov:" >> "$ANALYSIS_FILE"
-    tail -20 "$PERFORMANCE_LOG" >> "$ANALYSIS_FILE"
+    echo "Posledných 60 záznamov:" >> "$ANALYSIS_FILE"
+    tail -60 "$PERFORMANCE_LOG" >> "$ANALYSIS_FILE"
 else
     echo "Performance log neexistuje" >> "$ANALYSIS_FILE"
 fi
@@ -660,8 +660,8 @@ echo "" >> "$ANALYSIS_FILE"
 # Analýza health check logov
 echo "=== HEALTH CHECK ANALÝZA ===" >> "$ANALYSIS_FILE"
 if [[ -f "$LOG_DIR/health-check.log" ]]; then
-    echo "Posledných 20 záznamov:" >> "$ANALYSIS_FILE"
-    tail -20 "$LOG_DIR/health-check.log" >> "$ANALYSIS_FILE"
+    echo "Posledných 60 záznamov:" >> "$ANALYSIS_FILE"
+    tail -60 "$LOG_DIR/health-check.log" >> "$ANALYSIS_FILE"
 else
     echo "Health check log neexistuje" >> "$ANALYSIS_FILE"
 fi
