@@ -20,6 +20,7 @@ spec:
         app: build-agent-{{ .Values.pool.agentNameBase }}
         pool: {{ .Values.pool.agentNameBase }}
     spec:
+      serviceAccountName: build-agent-shared-sa
       imagePullSecrets:
       - name: acr-secret
       containers:
