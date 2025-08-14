@@ -1,0 +1,13 @@
+pool:
+  name: "Ssw-CypressTests"
+  agentNameBase: "ssw3-cy"
+  replicas: 2
+  scaler:
+    minReplicas: 2
+    maxReplicas: 4
+    pollingInterval: 30
+    cooldownPeriod: 3600
+    targetPipelinesQueueLength: "3"
+  image:
+    repository: krossk.azurecr.io/azure-agent-linux-cy
+    tag: 0.1
