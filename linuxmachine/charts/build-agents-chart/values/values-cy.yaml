@@ -3,11 +3,11 @@ pool:
   agentNameBase: "ssw3-cy"
   replicas: 2
   scaler:
-    minReplicas: 2
-    maxReplicas: 4
+    minReplicas: 4
+    maxReplicas: 8
     pollingInterval: 30
     cooldownPeriod: 3600
-    targetPipelinesQueueLength: "3"
+    targetPipelinesQueueLength: "2"
   image:
     repository: krossk.azurecr.io/azure-agent-linux-cy
     tag: 0.1
