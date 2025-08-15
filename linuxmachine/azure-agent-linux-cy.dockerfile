@@ -1,14 +1,30 @@
 # Base image
 FROM ubuntu:22.04 AS base
 
+ENV TARGETARCH="linux-x64"
 ENV DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-lc"]
 
 # KROK 1: Základné nástroje a systémové knižnice
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates curl unzip tar jq git gnupg apt-transport-https \
-    xauth xvfb \
-    libgtk2.0-0 libgtk-3-0 libgbm-dev libnss3 libxss1 libasound2 libxtst6 \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    unzip \
+    tar \
+    jq \
+    git \
+    gnupg \
+    apt-transport-https \
+    xauth \
+    xvfb \
+    libgtk2.0-0 \
+    libgtk-3-0 \
+    libgbm-dev \
+    libnss3 \
+    libxss1 \
+    libasound2 \
+    libxtst6 \
     && rm -rf /var/lib/apt/lists/*
 
 # KROK 2: Google Chrome (stabilný)
