@@ -8,7 +8,8 @@ fi
 
 # Vytvorenie workdir pre agenta
 WORKDIR="/opt/Agents/${AZP_AGENT_NAME}"
-mkdir -p ${WORKDIR}
+mkdir -p "${WORKDIR}"
+chmod -R 0777 "${WORKDIR}"
 cd ${WORKDIR}
 
 export AGENT_ALLOW_RUNASROOT=1
