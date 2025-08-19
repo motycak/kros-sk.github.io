@@ -1,6 +1,7 @@
 pool:
   name: "Default"
   agentNameBase: "default"
+  buildMachineName: "build4"
   replicas: 4
   scaler:
     minReplicas: 4

@@ -1,6 +1,7 @@
 pool:
   name: "Testing linux docker"
   agentNameBase: "testing-linux-docker"
+  buildMachineName: "build4"
   replicas: 2
   scaler:
     minReplicas: 2

@@ -1,6 +1,7 @@
 pool:
   name: "Deploy BE"
   agentNameBase: "deploy-be"
+  buildMachineName: "build4"
   replicas: 3
   scaler:
     minReplicas: 4
