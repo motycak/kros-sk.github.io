@@ -80,7 +80,16 @@ RUN mkdir -p "$NVM_DIR" \
 RUN echo 'export NVM_DIR="$HOME/.nvm"' >> /root/.bashrc \
  && echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"' >> /root/.bashrc
 
-# ---------- KROK 4: Cypress cache + voliteľná predinštalácia binárky ----------
+# ---------- KROK 4: PowerShell (pwsh) ----------
+RUN wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb \
+  && dpkg -i packages-microsoft-prod.deb \
+  && rm packages-microsoft-prod.deb \
+  && apt-get update \
+  && apt-get install -y powershell \
+  && ln -s /usr/bin/pwsh /usr/bin/powershell \
+  && rm -rf /var/lib/apt/lists/*
+
+# ---------- KROK 5: Cypress cache + voliteľná predinštalácia binárky ----------
 ENV CYPRESS_CACHE_FOLDER="/root/.cache/Cypress"
 
 # Nastav verziu pri builde ak chceš pred-kešovať binárku (inak preskočí)
@@ -97,7 +106,7 @@ RUN if [ -n "$CYPRESS_VERSION" ]; then \
 # --disable-dev-shm-usage: rieši /dev/shm; --no-sandbox: ak bežíš ako root
 ENV CHROME_FLAGS="--disable-dev-shm-usage --no-sandbox"
 
-# ---------- KROK 5: Pracovný adresár a štart skript ----------
+# ---------- KROK 6: Pracovný adresár a štart skript ----------
 WORKDIR /workspace
 
 COPY --chmod=755 start-k8s.sh /opt/Agents/start-k8s.sh
