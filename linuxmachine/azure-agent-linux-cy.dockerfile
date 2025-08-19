@@ -5,7 +5,7 @@ ENV TARGETARCH="linux-x64"
 ENV DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-lc"]
 
-# ---------- KROK 1: Základ + knižnice pre Chrome/Cypress ----------
+# ---------- STEP 1: Base + libraries for Chrome/Cypress ----------
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     ca-certificates \
