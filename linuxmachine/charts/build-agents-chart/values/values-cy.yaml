@@ -10,4 +10,4 @@ pool:
     targetPipelinesQueueLength: "2"
   image:
     repository: krossk.azurecr.io/azure-agent-linux-cy
-    tag: 0.0.5
+    tag: 0.0.6
