@@ -62,7 +62,7 @@ RUN echo 'export NVM_DIR="$HOME/.nvm"' >> /root/.bashrc \
 # Pracovný adresár (mountneš sem repo)
 WORKDIR /workspace
 
-COPY --chmod=755 start-k8s.sh /opt/Agents/start-k8s.sh
+COPY --chmod=777 start-k8s.sh /opt/Agents/start-k8s.sh
 RUN sed -i 's/\r$//' /opt/Agents/start-k8s.sh
 
 ENTRYPOINT ["/opt/Agents/start-k8s.sh"]
