@@ -33,7 +33,7 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: AZP_AGENT_NAME
-          value: "$(POD_NAME)-build4"
+          value: "$(POD_NAME)-{{ .Values.pool.buildMachineName }}"
         - name: KUBECONFIG
           value: "/opt/Agents/$(AZP_AGENT_NAME)/kubeconfig"
         - name: DEVEXTREME_KEY

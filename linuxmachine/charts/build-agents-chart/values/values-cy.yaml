@@ -1,10 +1,11 @@
 pool:
   name: "Ssw-CypressTests"
   agentNameBase: "ssw3-cy"
+  buildMachineName: "build3"
   replicas: 2
   scaler:
     minReplicas: 4
-    maxReplicas: 10
+    maxReplicas: 15
     pollingInterval: 30
     cooldownPeriod: 3600
     targetPipelinesQueueLength: "2"
