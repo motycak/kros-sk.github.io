@@ -90,7 +90,13 @@ RUN wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsof
   && rm -rf /var/lib/apt/lists/*
 
 # ---------- KROK 5: Cypress cache + voliteľná predinštalácia binárky ----------
-ENV CYPRESS_CACHE_FOLDER="/root/.cache/Cypress"
+
+# Creating cache directories and setting environment variables
+WORKDIR /opt/Agents
+ENV CYPRESS_CACHE_FOLDER="/opt/Agents/cache/cypress" \
+    NPM_CONFIG_CACHE="/opt/Agents/cache/npm" \
+    NUGET_PACKAGES="/opt/Agents/cache/nuget" \
+    NX_CACHE_FOLDER="/opt/Agents/cache/nx"
 
 # Nastav verziu pri builde ak chceš pred-kešovať binárku (inak preskočí)
 ARG CYPRESS_VERSION=
